@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://reasy/skin/inject.css" type="text/css"?> 
+<overlay id="reasy-overlay"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+	<script src="reasy_db.js" />
+	<script src="reasy_reader.js" />
+	<script src="reasy.js" />
+</overlay> 

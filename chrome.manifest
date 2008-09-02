@@ -1,0 +1,3 @@
+content reasy content/
+
+overlay chrome://browser/content/browser.xul chrome://reasy/content/overlay.xul
