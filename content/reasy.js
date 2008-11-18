@@ -406,7 +406,7 @@ function reasySelect()
 
 		if (gotText)
 		{
-			var reasySplit = gotText.split(/[ \n]/);
+			var reasySplit = gotText.split(/[- \n]/);
 			if (reasySplit && reasySplit.length >= reasy_db.minWords())
 			{
 				createReasyDom(document, reasySplit);
