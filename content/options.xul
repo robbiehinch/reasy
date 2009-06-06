@@ -17,6 +17,8 @@
         elm.value = reasy_db.fontFamily();
         elm = document.getElementById("reasy_font_size");
         elm.value = parseInt(reasy_db.fontSize());
+        elm = document.getElementById("reasy_deselect_close");
+        elm.checked = reasy_db.deselect_close();
         elm = document.getElementById("reasyAutoPlay");
         elm.checked = reasy_db.auto_play();
         elm = document.getElementById("reasyTxtColor");
@@ -43,6 +45,7 @@
 		elm = document.getElementById("reasyLiveInk");
 		elm.checked = reasy_db.live_ink();
 		enableLiveInk(pre_post);
+		enableMultilineOpacity(pre_post);
     }
 
     function reasy_prefs_accept()
@@ -71,7 +74,9 @@
     {
 		elm = document.getElementById("reasy_multi_line_opacity");
 		elm.disabled = !val;
-	}
+		elm = document.getElementById("reasy_multi_line_opacity_label");
+		elm.disabled = !val;
+ 	}
 	
     function enableLiveInk(val)
     {
@@ -107,6 +112,10 @@
 					<textbox type="number" min="6" id="reasy_font_size" />
 				</groupbox>
 
+				<checkbox id="reasy_deselect_close"
+					label="deselect text on close" 
+					oncommand="reasy_db.deselect_close_invert()" />
+
 				<checkbox id="reasyAutoPlay"
 					label="auto play" 
 					oncommand="reasy_db.auto_play_invert()" />
@@ -119,7 +128,7 @@
 					label="Show leading and trailing line" 
 					oncommand="reasyPrePostCommand()" />
 				
-				<label value="Opacity" />
+				<label value="Opacity" id="reasy_multi_line_opacity_label" />
 				<textbox type="number" min="0" max="100" id="reasy_multi_line_opacity" />
 
 				<checkbox id="reasyLiveInk"

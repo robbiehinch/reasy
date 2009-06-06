@@ -166,6 +166,17 @@ reasyDB.prototype.auto_play_invert = function()
 	return this.db().setBoolPref('auto_play', !this.auto_play());
 }
 
+
+reasyDB.prototype.deselect_close = function()
+{
+	return this.db().getBoolPref('deselect_close');
+}
+
+reasyDB.prototype.deselect_close_invert = function()
+{
+	return this.db().setBoolPref('deselect_close', !this.deselect_close());
+}
+
 reasyDB.prototype.ticker_tape = function()
 {
 	return this.db().getBoolPref('ticker');

@@ -61,9 +61,12 @@ function reasyClose(evt, div)
 	if (bg)
 		content.document.body.removeChild(bg);
 
-	var sel = content.window.getSelection();
-	if (sel && sel.removeAllRanges)
-		sel.removeAllRanges();
+	if (div || reasy_db.deselect_close())	//div is valid on forced close
+	{
+		var sel = content.window.getSelection();
+		if (sel && sel.removeAllRanges)
+			sel.removeAllRanges();
+	}
 
 	reasyKeyFn = reasySelect;
 		

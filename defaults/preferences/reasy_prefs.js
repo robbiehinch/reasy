@@ -19,3 +19,5 @@ pref("extensions.reasy.auto_popup", true);
 pref("extensions.reasy.action_key", 'R');
 pref("extensions.reasy.dim_background", 0);
 pref("extensions.reasy.multi_line_opacity", 0);
+pref("extensions.reasy.deselect_close", true);
+
