@@ -29,6 +29,8 @@
         elm.value = parseInt(reasy_db.punc_pause());
         elm = document.getElementById("reasy_dim_background");
         elm.value = parseInt(reasy_db.dim_background());
+        elm = document.getElementById("reasy_multi_line_opacity");
+        elm.value = parseInt(reasy_db.multi_line_opacity());
         elm = document.getElementById("reasyActionKey");
         elm.value = reasy_db.action_key();
 		elm = document.getElementById("reasyTicker");
@@ -59,10 +61,18 @@
         reasy_db.setPuncPause(parseInt(elm.value));
         elm = document.getElementById("reasy_dim_background");
         reasy_db.set_dim_background(parseInt(elm.value));
+        elm = document.getElementById("reasy_multi_line_opacity");
+        reasy_db.set_multi_line_opacity(parseInt(elm.value));
         elm = document.getElementById("reasyActionKey");
         reasy_db.set_action_key(elm.value.toUpperCase().charAt(0));
     }
     
+    function enableMultilineOpacity(val)
+    {
+		elm = document.getElementById("reasy_multi_line_opacity");
+		elm.disabled = !val;
+	}
+	
     function enableLiveInk(val)
     {
 		elm = document.getElementById("reasyLiveInk");
@@ -72,7 +82,9 @@
     function reasyPrePostCommand()
     {
 		reasy_db.pre_post_invert();
-		enableLiveInk(reasy_db.pre_post());
+		var enable = reasy_db.pre_post();
+		enableLiveInk(enable);
+		enableMultilineOpacity(enable);
 	}
     
     ]]>
@@ -107,6 +119,9 @@
 					label="Show leading and trailing line" 
 					oncommand="reasyPrePostCommand()" />
 				
+				<label value="Opacity" />
+				<textbox type="number" min="0" max="100" id="reasy_multi_line_opacity" />
+
 				<checkbox id="reasyLiveInk"
 					label="Live Ink pseudo-emulator" 
 					oncommand="reasy_db.live_ink_invert()" />

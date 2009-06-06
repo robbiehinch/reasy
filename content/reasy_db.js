@@ -272,4 +272,14 @@ reasyDB.prototype.set_dim_background = function(val)
 	return this.db().setIntPref('dim_background', val > 100 ? 100 : val);
 }
 
+reasyDB.prototype.multi_line_opacity = function()
+{
+	return this.db().getIntPref('multi_line_opacity');
+}
+
+reasyDB.prototype.set_multi_line_opacity = function(val)
+{
+	return this.db().setIntPref('multi_line_opacity', val > 100 ? 100 : val);
+}
+
 var reasy_db = new reasyDB();

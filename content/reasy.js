@@ -377,6 +377,13 @@ function createReasyDom(doc, reasySplit)
 				textDiv.style.left = db_left + 50*(i-1) + 'px';
 			else
 				textDiv.style.left = db_left - 50 + 'px';
+				
+			if (0 == i%2)	// set opacity of leading and trailing lines
+			{
+				var opacity = reasy_db.multi_line_opacity();
+				if (opacity > 0)
+					textDiv.style.opacity = parseFloat()/100.0;
+			}
 		}
 		textDiv.appendChild(reasyDiv[i]);
 		textDiv.onmousedown = function(){reasyTextClicked(reasyReader);};
