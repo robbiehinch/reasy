@@ -156,6 +156,16 @@ reasyDB.prototype.setPuncPause = function(val)
   return this.db().setIntPref('punc_pause', val);
 }
 
+reasyDB.prototype.skip_count = function()
+{
+  return this.db().getIntPref('skip_count');
+}
+
+reasyDB.prototype.setSkipCount = function(val)
+{
+  return this.db().setIntPref('skip_count', val);
+}
+
 reasyDB.prototype.auto_play = function()
 {
 	return this.db().getBoolPref('auto_play');
@@ -165,7 +175,6 @@ reasyDB.prototype.auto_play_invert = function()
 {
 	return this.db().setBoolPref('auto_play', !this.auto_play());
 }
-
 
 reasyDB.prototype.deselect_close = function()
 {
@@ -266,6 +275,28 @@ reasyDB.prototype.set_action_key = function(val)
 {
 	if (val && '' != val)
 		this.db().setCharPref('action_key', val);
+}
+
+reasyDB.prototype.fwd_key = function()
+{
+	return this.db().getCharPref('fwd_key');
+}
+
+reasyDB.prototype.set_fwd_key = function(val)
+{
+	if (val && '' != val)
+		this.db().setCharPref('fwd_key', val);
+}
+
+reasyDB.prototype.back_key = function()
+{
+	return this.db().getCharPref('back_key');
+}
+
+reasyDB.prototype.set_back_key = function(val)
+{
+	if (val && '' != val)
+		this.db().setCharPref('back_key', val);
 }
 
 reasyDB.prototype.read_interval = function()

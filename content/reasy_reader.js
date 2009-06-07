@@ -1,4 +1,4 @@
-function reasy_reader(txt, reasyHtml, pre_post_mode)
+function reasy_reader(txt, reasyHtml, pre_post_mode, skip_count)
 {
   this.txt = txt;
   this.reasyHtml = reasyHtml;
@@ -7,6 +7,7 @@ function reasy_reader(txt, reasyHtml, pre_post_mode)
   this.play = false;
   this.set_node_text();
   this.pre_post_mode = pre_post_mode;
+  this.skip_count = skip_count;
 }
 
 reasy_reader.prototype.playPause = function()
@@ -61,21 +62,33 @@ reasy_reader.prototype.set_node_text = function()
 	return /[\.,:;!\?]/.test(text);
 }
 
+reasy_reader.prototype.fwd = function()
+{
+	this.position = Math.min(this.txt.length-1, this.position + this.skip_count);
+	this.set_node_text();
+}
+
+reasy_reader.prototype.back = function()
+{
+	this.position = Math.max(0, this.position - this.skip_count);
+	this.set_node_text();
+}
+
 reasy_reader.prototype.run = function()
 {
   if (this.play)
   {
     var punctuation = this.set_node_text();
-	var fixation = reasy_db.fixation();
-	var ticker = reasy_db.ticker_tape();
-	var textlen = this.txt.length;
-	
-	if (ticker)
-	    this.position += 1;
-	else
-	    this.position += fixation;
+    var fixation = reasy_db.fixation();
+    var ticker = reasy_db.ticker_tape();
+    var textlen = this.txt.length;
+    
+    if (ticker)
+        this.position += 1;
+    else
+        this.position += fixation;
 
-	var position = this.position;
+    var position = this.position;
     if ((!ticker && position < (textlen + fixation))
 		|| (ticker && ((position + fixation) <= (textlen+1))))
     {

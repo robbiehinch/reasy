@@ -29,12 +29,18 @@
         elm.value = parseInt(reasy_db.minWords());
         elm = document.getElementById("reasy_punc_pause");
         elm.value = parseInt(reasy_db.punc_pause());
+        elm = document.getElementById("reasy_skip_count");
+        elm.value = parseInt(reasy_db.skip_count());
         elm = document.getElementById("reasy_dim_background");
         elm.value = parseInt(reasy_db.dim_background());
         elm = document.getElementById("reasy_multi_line_opacity");
         elm.value = parseInt(reasy_db.multi_line_opacity());
         elm = document.getElementById("reasyActionKey");
         elm.value = reasy_db.action_key();
+        elm = document.getElementById("reasyFwdKey");
+        elm.value = reasy_db.fwd_key();
+        elm = document.getElementById("reasyBackKey");
+        elm.value = reasy_db.back_key();
 		elm = document.getElementById("reasyTicker");
 		elm.checked = reasy_db.ticker_tape();
 		elm = document.getElementById("reasyAutoPopup");
@@ -60,6 +66,8 @@
         reasy_db.setBkgColor(elm.color);
         elm = document.getElementById("reasy_min_words");
         reasy_db.setMinWords(parseInt(elm.value));
+        elm = document.getElementById("reasy_skip_count");
+        reasy_db.setSkipCount(parseInt(elm.value));
         elm = document.getElementById("reasy_punc_pause");
         reasy_db.setPuncPause(parseInt(elm.value));
         elm = document.getElementById("reasy_dim_background");
@@ -68,6 +76,10 @@
         reasy_db.set_multi_line_opacity(parseInt(elm.value));
         elm = document.getElementById("reasyActionKey");
         reasy_db.set_action_key(elm.value.toUpperCase().charAt(0));
+        elm = document.getElementById("reasyFwdKey");
+        reasy_db.set_fwd_key(elm.value.toUpperCase().charAt(0));
+        elm = document.getElementById("reasyBackKey");
+        reasy_db.set_back_key(elm.value.toUpperCase().charAt(0));
     }
     
     function enableMultilineOpacity(val)
@@ -105,13 +117,6 @@
 		<tabpanels>
 			<tabpanel orient="vertical">
 
-				<groupbox>
-					<caption label="Font" />
-					<textbox id="reasy_font" />
-					<label value="Size" />
-					<textbox type="number" min="6" id="reasy_font_size" />
-				</groupbox>
-
 				<checkbox id="reasy_deselect_close"
 					label="deselect text on close" 
 					oncommand="reasy_db.deselect_close_invert()" />
@@ -138,9 +143,25 @@
 				<label value="Punctuation pause (ms):" />
 				<textbox type="number" min="0" max="250" id="reasy_punc_pause" />
 
+				<label value="Skip words" />
+				<textbox type="number" min="0" max="250" id="reasy_skip_count" />
+
+				<label value="Skip forward action key:" />
+				<textbox id="reasyFwdKey" />
+
+				<label value="Skip back action key:" />
+				<textbox id="reasyBackKey" />
+
 			</tabpanel>
 
 			<tabpanel orient="vertical">
+
+				<groupbox>
+					<caption label="Font" />
+					<textbox id="reasy_font" />
+					<label value="Size" />
+					<textbox type="number" min="6" id="reasy_font_size" />
+				</groupbox>
 
 				<checkbox id="reasyAutoPopup"
 					label="display immediately" 

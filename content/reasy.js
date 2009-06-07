@@ -6,7 +6,11 @@ firefox_pos += sFirefox.length + 1;
 var ver_string = navigator.userAgent.substring(firefox_pos).split(' ')[0];
 var major_ver = parseInt(ver_string);
 var reasyKeyFn = reasySelect;
+var reasyFwdFn = null;
+var reasyBackFn = null;
 //FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
+//Firebug.Console.log("hello");
+
 
 function XY(x, y)
 {
@@ -69,6 +73,8 @@ function reasyClose(evt, div)
 	}
 
 	reasyKeyFn = reasySelect;
+	reasyFwdFn = null;
+	reasyBackFn = null;
 		
 	if (div)
 		reasyMouseUp(evt, div);
@@ -195,14 +201,6 @@ function reasyMouseOver(evt, div)
 	{
 		div.style.cursor = 'default';
 	}
-}
-
-function reasyTextClicked(reasyReader)
-{
-	if (reasyReader)
-	{
-		reasyReader.playPause();
-	}	
 }
 
 function reasyIncWPM(reasyWPMText)
@@ -355,7 +353,7 @@ function createReasyDom(doc, reasySplit)
 		reasyDiv[2] = doc.createTextNode(' ');
 	}
 	
-	var reasyReader = new reasy_reader(reasySplit, reasyDiv, pre_post_mode);
+	var reasyReader = new reasy_reader(reasySplit, reasyDiv, pre_post_mode, reasy_db.skip_count());
 
 	var paddingDiv = doc.createElement('div');
 	paddingDiv.style.height = '38%';
@@ -389,7 +387,7 @@ function createReasyDom(doc, reasySplit)
 			}
 		}
 		textDiv.appendChild(reasyDiv[i]);
-		textDiv.onmousedown = function(){reasyTextClicked(reasyReader);};
+		textDiv.onmousedown = function(){reasyReader.playPause();};
 		textDiv.style.cursor = 'default';
 		reasyHouseDiv.appendChild(textDiv);
 	}
@@ -400,9 +398,11 @@ function createReasyDom(doc, reasySplit)
 
 	setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
 	
-	reasyKeyFn = function(){reasyTextClicked(reasyReader);};
+	reasyKeyFn = function(){reasyReader.playPause();};
+	reasyFwdFn = function(){reasyReader.fwd();};
+	reasyBackFn = function(){reasyReader.back();};
 	if (reasy_db.auto_play())
-		reasyTextClicked(reasyReader);
+		reasyReader.playPause();;
 }
 
 function reasySelect()
@@ -429,6 +429,10 @@ function reasyKeyDown(evt)
 {
 	if (reasy_db.action_key().charCodeAt(0) == evt.which)
 		reasyKeyFn();
+	else if ((reasy_db.fwd_key().charCodeAt(0) == evt.which) && reasyFwdFn)
+		reasyFwdFn();
+	else if ((reasy_db.back_key().charCodeAt(0) == evt.which) && reasyBackFn)
+		reasyBackFn();
 }
 
 function reasyWindowFocus(evt)
