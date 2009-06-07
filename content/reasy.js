@@ -235,19 +235,19 @@ function createReasyDom(doc, reasySplit)
 	reasyHouseDiv.style.position = 'fixed';
 
 	var db_top = reasy_db.top();
-	if (db_top < -5000)
+	if (db_top < -100)
 		db_top = doc.height/5;
 	reasyHouseDiv.style.top = db_top + 'px';
 	var db_left = reasy_db.left();
-	if (db_left < -5000)
+	if (db_left < -100)
 		db_left = doc.width/5;
 	reasyHouseDiv.style.left = db_left + 'px';
 	var db_height = reasy_db.height();
-	if (db_height < -5000)
+	if (db_height <= 0)
 		db_height = db_top*3;
 	reasyHouseDiv.style.height = db_height + 'px';
 	var db_width = reasy_db.width();
-	if (db_width < -5000)
+	if (db_width <= 0)
 		db_width = db_left*3;
 	reasyHouseDiv.style.width = db_width + 'px';
 	reasyHouseDiv.style.zIndex = 10;
@@ -407,6 +407,7 @@ function createReasyDom(doc, reasySplit)
 
 function reasySelect()
 {
+//  Firebug.Console.log("reasySelect");
 	// get the text content if there is not an existing reasy session
 	if (content && content.document && !content.document.getElementById(reasyHouseDivName))
 	{
@@ -437,6 +438,8 @@ function reasyKeyDown(evt)
 
 function reasyWindowFocus(evt)
 {
+  alert("reasyWindowFocus");
+//  Firebug.Console.log("reasyWindowFocus");
 	if (reasy_db.auto_popup())
 		content.document.addEventListener("mouseup", reasySelect, false);
 	content.document.addEventListener("keydown", reasyKeyDown, false);
@@ -448,5 +451,6 @@ function reasyWindowUnload(evt)
 	content.document.removeEventListener("keydown", reasyKeyDown, false);
 }
 
+  alert("reasy");
 window.addEventListener("focus", reasyWindowFocus, true);
 window.addEventListener("unload", reasyWindowUnload, true);
