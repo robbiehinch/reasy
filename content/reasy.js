@@ -1,13 +1,14 @@
 var reasyHouseDivName = 'reasyHouseTextDiv';
 var reasyOpaqueBGName = 'reasyOpaqueBG';
 var sFirefox = "Firefox";
-var firefox_pos = navigator.userAgent.indexOf("Firefox");
+var firefox_pos = navigator.userAgent.indexOf(sFirefox);
 firefox_pos += sFirefox.length + 1;
 var ver_string = navigator.userAgent.substring(firefox_pos).split(' ')[0];
 var major_ver = parseInt(ver_string);
 var reasyKeyFn = reasySelect;
 var reasyFwdFn = null;
 var reasyBackFn = null;
+
 //FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
 //Firebug.Console.log("hello");
 
@@ -407,7 +408,6 @@ function createReasyDom(doc, reasySplit)
 
 function reasySelect()
 {
-//  Firebug.Console.log("reasySelect");
 	// get the text content if there is not an existing reasy session
 	if (content && content.document && !content.document.getElementById(reasyHouseDivName))
 	{
@@ -417,7 +417,7 @@ function reasySelect()
 
 		if (gotText)
 		{
-			var reasySplit = gotText.split(/[—- \n]/);
+			var reasySplit = gotText.split(/[-\u2013\u2014\s]/gi);
 			if (reasySplit && reasySplit.length >= reasy_db.minWords())
 			{
 				createReasyDom(document, reasySplit);
@@ -438,8 +438,6 @@ function reasyKeyDown(evt)
 
 function reasyWindowFocus(evt)
 {
-  alert("reasyWindowFocus");
-//  Firebug.Console.log("reasyWindowFocus");
 	if (reasy_db.auto_popup())
 		content.document.addEventListener("mouseup", reasySelect, false);
 	content.document.addEventListener("keydown", reasyKeyDown, false);
@@ -451,6 +449,5 @@ function reasyWindowUnload(evt)
 	content.document.removeEventListener("keydown", reasyKeyDown, false);
 }
 
-  alert("reasy");
 window.addEventListener("focus", reasyWindowFocus, true);
 window.addEventListener("unload", reasyWindowUnload, true);
