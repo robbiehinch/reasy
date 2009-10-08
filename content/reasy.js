@@ -296,7 +296,7 @@ function createReasyDom(doc, reasySplit)
 
 	// make settings text div
 	var settingsDiv = doc.createElement('div');
-	settingsDiv.style.color = 'white';
+	reasy_db.txtColor(settingsDiv);
 	settingsDiv.style.fontSize = '16px';
 	settingsDiv.style.fontWeight = 'bold';
 	settingsDiv.style.fontFamily = 'Tahoma';
@@ -406,20 +406,48 @@ function createReasyDom(doc, reasySplit)
 		reasyReader.playPause();;
 }
 
+function getContentSelectedText(cont)
+{
+	if (!cont || !cont.document)
+		return "";
+	
+	var gotText = cont.document.getSelection();
+	if (major_ver > 2)
+		gotText = gotText.toString();
+	Firebug.Console.log(gotText);
+	return gotText;
+}
+
+function getIFrameSelection(cont)
+{
+	var ret = getContentSelectedText(cont);
+	for (var frame in window.frames)
+	{
+		if (frame.contentWindow)
+		{
+			if (frame.contentWindow.document && frame.contentWindow.document.body && frame.contentWindow.document.body.innerHTML)
+				ret += getContentSelectedText(frame.contentWindow.document.body.innerHTML)
+			ret += getIFrameSelection(frame.contentWindow);
+		}
+	}
+	return ret;
+}
+
 function reasySelect()
 {
+	Firebug.Console.log("reasySelect");
 	// get the text content if there is not an existing reasy session
-	if (content && content.document && !content.document.getElementById(reasyHouseDivName))
+	if (!content.document.getElementById(reasyHouseDivName))
 	{
-		var gotText = content.document.getSelection();
-		if (major_ver > 2)
-			gotText = gotText.toString();
+		var gotText = getIFrameSelection(content);
 
 		if (gotText)
 		{
+			Firebug.Console.log("gotText");
 			var reasySplit = gotText.split(/[-\u2013\u2014\s]/gi);
 			if (reasySplit && reasySplit.length >= reasy_db.minWords())
 			{
+				Firebug.Console.log("createReasyDom");
 				createReasyDom(document, reasySplit);
 			}
 		}
