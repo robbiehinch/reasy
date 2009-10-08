@@ -6,4 +6,13 @@
 	<script src="reasy_db.js" />
 	<script src="reasy_reader.js" />
 	<script src="reasy.js" />
+
+	<popup id="contentAreaContextMenu">
+		<menuitem id="reasy-context"
+			label="Reasy..." accesskey="R" 
+			oncommand="reasySelect();" 
+			image="chrome://reasy/content/reasy_logo.png" 
+			class="menuitem-iconic"/>
+	</popup>
+	
 </overlay> 
