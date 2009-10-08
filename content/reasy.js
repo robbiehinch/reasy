@@ -406,28 +406,37 @@ function createReasyDom(doc, reasySplit)
 		reasyReader.playPause();;
 }
 
-function getContentSelectedText(cont)
+function getContentSelectedText(doc)
 {
-	if (!cont || !cont.document)
+	if (!doc)
 		return "";
 	
-	var gotText = cont.document.getSelection();
+	var gotText = doc.getSelection();
 	if (major_ver > 2)
 		gotText = gotText.toString();
-	Firebug.Console.log(gotText);
+	
 	return gotText;
 }
 
-function getIFrameSelection(cont)
+function getIFrameSelection(doc)
 {
-	var ret = getContentSelectedText(cont);
-	for (var frame in window.frames)
+	var ret = getContentSelectedText(doc);
+	for (var f in window.frames)
 	{
-		if (frame.contentWindow)
+		if (f.contentWindow)
 		{
-			if (frame.contentWindow.document && frame.contentWindow.document.body && frame.contentWindow.document.body.innerHTML)
-				ret += getContentSelectedText(frame.contentWindow.document.body.innerHTML)
-			ret += getIFrameSelection(frame.contentWindow);
+//			Firebug.Console.log("frame.contentWindow");
+			ret += getContentSelectedText(f.contentWindow);
+		}
+		if (f.document)
+		{
+//			Firebug.Console.log("frame.document");
+			ret += getContentSelectedText(f.document);
+		}
+		if (f.contentDocument)
+		{
+//			Firebug.Console.log("frame.contentDocument");
+			ret += getContentSelectedText(f.contentDocument);
 		}
 	}
 	return ret;
@@ -435,21 +444,16 @@ function getIFrameSelection(cont)
 
 function reasySelect()
 {
-	Firebug.Console.log("reasySelect");
 	// get the text content if there is not an existing reasy session
-	if (!content.document.getElementById(reasyHouseDivName))
+	if (content && content.document && !content.document.getElementById(reasyHouseDivName))
 	{
-		var gotText = getIFrameSelection(content);
+		var gotText = getIFrameSelection(content.document);
 
 		if (gotText)
 		{
-			Firebug.Console.log("gotText");
 			var reasySplit = gotText.split(/[-\u2013\u2014\s]/gi);
 			if (reasySplit && reasySplit.length >= reasy_db.minWords())
-			{
-				Firebug.Console.log("createReasyDom");
 				createReasyDom(document, reasySplit);
-			}
 		}
 	}
 }
