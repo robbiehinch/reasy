@@ -324,4 +324,14 @@ reasyDB.prototype.set_multi_line_opacity = function(val)
 	return this.db().setIntPref('multi_line_opacity', val > 100 ? 100 : val);
 }
 
+reasyDB.prototype.get_text_border = function()
+{
+	return this.db().getIntPref('text_border') + 'px';
+}
+
+reasyDB.prototype.set_text_border = function(val)
+{
+	return this.db().setIntPref('text_border', val);
+}
+
 var reasy_db = new reasyDB();

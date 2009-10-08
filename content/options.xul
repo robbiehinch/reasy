@@ -33,6 +33,8 @@
         elm.value = parseInt(reasy_db.skip_count());
         elm = document.getElementById("reasy_dim_background");
         elm.value = parseInt(reasy_db.dim_background());
+        elm = document.getElementById("reasy_text_spacing");
+        elm.value = parseInt(reasy_db.get_text_border());
         elm = document.getElementById("reasy_multi_line_opacity");
         elm.value = parseInt(reasy_db.multi_line_opacity());
         elm = document.getElementById("reasyActionKey");
@@ -72,6 +74,8 @@
         reasy_db.setPuncPause(parseInt(elm.value));
         elm = document.getElementById("reasy_dim_background");
         reasy_db.set_dim_background(parseInt(elm.value));
+        elm = document.getElementById("reasy_text_spacing");
+        reasy_db.set_text_border(parseInt(elm.value));
         elm = document.getElementById("reasy_multi_line_opacity");
         reasy_db.set_multi_line_opacity(parseInt(elm.value));
         elm = document.getElementById("reasyActionKey");
@@ -174,6 +178,9 @@
 
 				<label value="and dim original page by (%):" />
 				<textbox type="number" min="0" max="100" id="reasy_dim_background" />
+
+				<label value="multi-line text spacing" />
+				<textbox type="number" min="0" max="100" id="reasy_text_spacing" />
 
 			</tabpanel>
 

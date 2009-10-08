@@ -360,6 +360,7 @@ function createReasyDom(doc, reasySplit)
 	paddingDiv.style.height = '38%';
 	reasyHouseDiv.appendChild(paddingDiv);
 
+	var bwidth = reasy_db.get_text_border();
 	for (i=0;i<reasyDiv.length;i++)
 	{
 		var textDiv = doc.createElement('div');
@@ -386,6 +387,7 @@ function createReasyDom(doc, reasySplit)
 				if (opacity > 0)
 					textDiv.style.opacity = parseFloat()/100.0;
 			}
+			textDiv.style.padding = bwidth;
 		}
 		textDiv.appendChild(reasyDiv[i]);
 		textDiv.onmousedown = function(){reasyReader.playPause();};
