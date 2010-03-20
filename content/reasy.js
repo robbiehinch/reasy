@@ -37,193 +37,179 @@ XY.prototype.diff_coords = function(x, y)
 	return this.x != x || this.y != y;
 }
 
-function getContentSelectedText(doc) {
-    if (!doc)
-        return "";
-
-    var gotText = doc.getSelection();
-    if (major_ver > 2)
-        gotText = gotText.toString();
-
-    return gotText;
-}
-
-function getIFrameSelection(doc) {
-    var ret = getContentSelectedText(doc);
-    for (var f in window.frames) {
-        if (f.contentWindow) {
-            //			Firebug.Console.log("frame.contentWindow");
-            ret += getContentSelectedText(f.contentWindow);
-        }
-        if (f.document) {
-            //			Firebug.Console.log("frame.document");
-            ret += getContentSelectedText(f.document);
-        }
-        if (f.contentDocument) {
-            //			Firebug.Console.log("frame.contentDocument");
-            ret += getContentSelectedText(f.contentDocument);
-        }
-    }
-    return ret;
-}
-
-function setOrReplaceNode(nodeName, node)
-{
-	// replace the old div or add the div to the document
-	var oldNode = content.document.getElementById(nodeName);
-	if (oldNode)
-	{
-		var result = content.document.body.replaceChild(node, oldNode);
-		if (null == result)
-		{
-			content.document.body.appendChild(node);
-		}
-	}
-	else
-		content.document.body.appendChild(node);
-}
-
-
-function reasyMoveFunction(evt, div, old_x, old_y)
-{
-	var ntop = (parseInt(div.style.top) + evt.clientY - old_y);
-	var nleft = (parseInt(div.style.left) + evt.clientX - old_x);
-	div.style.top = ntop + 'px';
-	div.style.left = nleft + 'px';
-	reasy_db.setTop(ntop);
-	reasy_db.setLeft(nleft);
-}
-
-function reasySizeLeft(evt, div, old_x, old_y)
-{
-	var diff = evt.clientX - old_x;
-	var nleft = parseInt(div.style.left) + diff;
-	var nwidth = parseInt(div.style.width) - diff;
-	div.style.left = nleft + 'px';
-	div.style.width = nwidth + 'px';
-	reasy_db.setLeft(nleft);
-	reasy_db.setWidth(nwidth);
-}
-
-function reasySizeRight(evt, div, old_x, old_y)
-{
-	var diff = evt.clientX - old_x;
-	var nwidth = parseInt(div.style.width) + diff;
-	div.style.width = nwidth + 'px';
-	reasy_db.setWidth(nwidth);
-}
-
-function reasySizeTop(evt, div, old_x, old_y)
-{
-	var diff = evt.clientY - old_y;
-	var ntop = parseInt(div.style.top) + diff;
-	var nheight = parseInt(div.style.height) - diff;
-	div.style.top = ntop + 'px';
-	div.style.height = nheight + 'px';
-	reasy_db.setTop(ntop);
-	reasy_db.setHeight(nheight);
-}
-
-function reasySizeBottom(evt, div, old_x, old_y)
-{
-	var diff = evt.clientY - old_y;
-	var nheight = parseInt(div.style.height) + diff;
-	div.style.height = nheight + 'px';
-	reasy_db.setHeight(nheight);
-}
-
-function reasyMouseMove(evt, myXY, div, move_fn)
-{
-	var nx = evt.clientX;
-	var ny = evt.clientY;
-	if (myXY.diff_coords(nx, ny))
-	{
-		if (move_fn)
-			move_fn(evt, div, myXY.getX(), myXY.getY());
-		myXY.change(nx, ny);
-	}
-}
-
-function reasyHouseClicked(evt, div)
-{
-	var x = evt.clientX;
-	var y = evt.clientY;
-	var x_diff = x - parseInt(div.style.left);
-	var y_diff = y - parseInt(div.style.top);
-	var fn = reasyMoveFunction;
-	if (x_diff < 10)
-		fn = reasySizeLeft;
-	else if (x_diff >= (parseInt(div.style.width) - 10))
-		fn = reasySizeRight;
-	else if (y_diff < 10)
-		fn = reasySizeTop;
-	else if (y_diff >= (parseInt(div.style.height) - 10))
-		fn = reasySizeBottom;
-
-	if (fn == reasyMoveFunction)
-		div.style.cursor = 'move';
-	myXY = new XY(x, y);
-	div.onmousemove = function(newevt){reasyMouseMove(newevt, myXY, div, fn);};
-
-	content.document.addEventListener("mousemove"
-		, div.onmousemove
-		, false);
-	content.document.addEventListener("mouseup"
-		, div.onmouseup
-		, false);
-}
-
-function reasyMouseOver(evt, div)
-{
-	var x = evt.clientX;
-	var y = evt.clientY;
-	var x_diff = x - parseInt(div.style.left);
-	var y_diff = y - parseInt(div.style.top);
-	if (x_diff < 10 || x_diff >= (parseInt(div.style.width) - 10))
-	{
-		//near edges
-		div.style.cursor = 'e-resize';
-	}
-	else if (y_diff < 10 || y_diff >= (parseInt(div.style.height) - 10))
-	{
-		//near edges
-		div.style.cursor = 'n-resize';
-	}
-	else if (!div.onmousemove)
-	{
-		div.style.cursor = 'default';
-	}
-}
-
-function reasyIncWPM(reasyWPMText)
-{
-	reasy_db.incWpm();
-	reasyWPMText.nodeValue = reasy_db.wpm();
-}
-
-function reasyDecWPM(reasyWPMText)
-{
-	reasy_db.decWpm();
-	reasyWPMText.nodeValue = reasy_db.wpm();
-}
-
-function reasyIncFixation(reasyFixationText)
-{
-	reasy_db.incFix();
-	reasyFixationText.nodeValue = reasy_db.fixation();
-}
-
-function reasyDecFixation(reasyFixationText)
-{
-	reasy_db.decFix();
-	reasyFixationText.nodeValue = reasy_db.fixation();
-}
-
 if (!com) var com = {};
 if (!com.reasy) com.reasy = {};
 if (!com.reasy.reasy) com.reasy.reasy = {};
 
 com.reasy.reasy = {
+
+    getContentSelectedText: function (doc) {
+        if (!doc)
+            return "";
+
+        var gotText = doc.getSelection();
+        if (major_ver > 2)
+            gotText = gotText.toString();
+
+        return gotText;
+    },
+
+    getIFrameSelection: function (doc) {
+        var ret = com.reasy.reasy.getContentSelectedText(doc);
+        for (var f in window.frames) {
+            if (f.contentWindow) {
+                //			Firebug.Console.log("frame.contentWindow");
+                ret += com.reasy.reasy.getContentSelectedText(f.contentWindow);
+            }
+            if (f.document) {
+                //			Firebug.Console.log("frame.document");
+                ret += com.reasy.reasy.getContentSelectedText(f.document);
+            }
+            if (f.contentDocument) {
+                //			Firebug.Console.log("frame.contentDocument");
+                ret += com.reasy.reasy.getContentSelectedText(f.contentDocument);
+            }
+        }
+        return ret;
+    },
+
+    setOrReplaceNode: function (nodeName, node) {
+	    // replace the old div or add the div to the document
+	    var oldNode = content.document.getElementById(nodeName);
+	    if (oldNode)
+	    {
+		    var result = content.document.body.replaceChild(node, oldNode);
+		    if (null == result)
+		    {
+			    content.document.body.appendChild(node);
+		    }
+	    }
+	    else
+		    content.document.body.appendChild(node);
+    },
+
+    moveFunction: function (evt, div, old_x, old_y) {
+	    var ntop = (parseInt(div.style.top) + evt.clientY - old_y);
+	    var nleft = (parseInt(div.style.left) + evt.clientX - old_x);
+	    div.style.top = ntop + 'px';
+	    div.style.left = nleft + 'px';
+	    reasy_db.setTop(ntop);
+	    reasy_db.setLeft(nleft);
+    },
+
+    sizeLeft: function (evt, div, old_x, old_y) {
+	    var diff = evt.clientX - old_x;
+	    var nleft = parseInt(div.style.left) + diff;
+	    var nwidth = parseInt(div.style.width) - diff;
+	    div.style.left = nleft + 'px';
+	    div.style.width = nwidth + 'px';
+	    reasy_db.setLeft(nleft);
+	    reasy_db.setWidth(nwidth);
+    },
+
+    sizeRight: function (evt, div, old_x, old_y) {
+	    var diff = evt.clientX - old_x;
+	    var nwidth = parseInt(div.style.width) + diff;
+	    div.style.width = nwidth + 'px';
+	    reasy_db.setWidth(nwidth);
+    },
+
+    sizeTop: function (evt, div, old_x, old_y) {
+	    var diff = evt.clientY - old_y;
+	    var ntop = parseInt(div.style.top) + diff;
+	    var nheight = parseInt(div.style.height) - diff;
+	    div.style.top = ntop + 'px';
+	    div.style.height = nheight + 'px';
+	    reasy_db.setTop(ntop);
+	    reasy_db.setHeight(nheight);
+    },
+
+    sizeBottom: function (evt, div, old_x, old_y) {
+	    var diff = evt.clientY - old_y;
+	    var nheight = parseInt(div.style.height) + diff;
+	    div.style.height = nheight + 'px';
+	    reasy_db.setHeight(nheight);
+    },
+
+    mouseMove: function (evt, myXY, div, move_fn) {
+	    var nx = evt.clientX;
+	    var ny = evt.clientY;
+	    if (myXY.diff_coords(nx, ny))
+	    {
+		    if (move_fn)
+			    move_fn(evt, div, myXY.getX(), myXY.getY());
+		    myXY.change(nx, ny);
+	    }
+    },
+
+    houseClicked: function (evt, div) {
+	    var x = evt.clientX;
+	    var y = evt.clientY;
+	    var x_diff = x - parseInt(div.style.left);
+	    var y_diff = y - parseInt(div.style.top);
+	    var fn = com.reasy.reasy.moveFunction;
+	    if (x_diff < 10)
+		    fn = com.reasy.reasy.sizeLeft;
+	    else if (x_diff >= (parseInt(div.style.width) - 10))
+		    fn = com.reasy.reasy.sizeRight;
+	    else if (y_diff < 10)
+		    fn = com.reasy.reasy.sizeTop;
+	    else if (y_diff >= (parseInt(div.style.height) - 10))
+		    fn = com.reasy.reasy.sizeBottom;
+
+	    if (fn == com.reasy.reasy.moveFunction)
+		    div.style.cursor = 'move';
+	    myXY = new XY(x, y);
+	    div.onmousemove = function(newevt){com.reasy.reasy.mouseMove(newevt, myXY, div, fn);};
+
+	    content.document.addEventListener("mousemove"
+		    , div.onmousemove
+		    , false);
+	    content.document.addEventListener("mouseup"
+		    , div.onmouseup
+		    , false);
+    },
+
+    mouseOver: function (evt, div) {
+	    var x = evt.clientX;
+	    var y = evt.clientY;
+	    var x_diff = x - parseInt(div.style.left);
+	    var y_diff = y - parseInt(div.style.top);
+	    if (x_diff < 10 || x_diff >= (parseInt(div.style.width) - 10))
+	    {
+		    //near edges
+		    div.style.cursor = 'e-resize';
+	    }
+	    else if (y_diff < 10 || y_diff >= (parseInt(div.style.height) - 10))
+	    {
+		    //near edges
+		    div.style.cursor = 'n-resize';
+	    }
+	    else if (!div.onmousemove)
+	    {
+		    div.style.cursor = 'default';
+	    }
+    },
+
+    incWPM: function (reasyWPMText) {
+	    reasy_db.incWpm();
+	    reasyWPMText.nodeValue = reasy_db.wpm();
+    },
+
+    decWPM: function (reasyWPMText) {
+	    reasy_db.decWpm();
+	    reasyWPMText.nodeValue = reasy_db.wpm();
+    },
+
+    incFixation:function (reasyFixationText) {
+	    reasy_db.incFix();
+	    reasyFixationText.nodeValue = reasy_db.fixation();
+    },
+
+    decFixation:function (reasyFixationText) {
+	    reasy_db.decFix();
+	    reasyFixationText.nodeValue = reasy_db.fixation();
+    },
 
     mouseUp: function(evt, div) {
         div.style.cursor = 'default';
@@ -324,7 +310,7 @@ com.reasy.reasy = {
             opaque_bg.style.zIndex = 9;
             reasy_db.bkgColor(opaque_bg);
             opaque_bg.setAttribute('id', reasyOpaqueBGName);
-            setOrReplaceNode(reasyOpaqueBGName, opaque_bg);
+            com.reasy.reasy.setOrReplaceNode(reasyOpaqueBGName, opaque_bg);
         }
 
         // make settings text div
@@ -339,7 +325,7 @@ com.reasy.reasy = {
         var reasyWPMText = doc.createTextNode(reasy_db.wpm());
         {
             var incWpmDiv = doc.createElement('div');
-            incWpmDiv.onmousedown = function() { reasyIncWPM(reasyWPMText); }
+            incWpmDiv.onmousedown = function() { com.reasy.reasy.incWPM(reasyWPMText); }
             incWpmDiv.appendChild(doc.createTextNode('+'));
             incWpmDiv.style.cursor = 'default';
             wpmDiv.appendChild(incWpmDiv);
@@ -349,7 +335,7 @@ com.reasy.reasy = {
         wpmDiv.style.padding = '10px';
 
         var decWpmDiv = doc.createElement('div');
-        decWpmDiv.onmousedown = function() { reasyDecWPM(reasyWPMText); }
+        decWpmDiv.onmousedown = function() { com.reasy.reasy.decWPM(reasyWPMText); }
         decWpmDiv.appendChild(doc.createTextNode('-'));
         decWpmDiv.style.cursor = 'default';
         wpmDiv.appendChild(decWpmDiv);
@@ -359,7 +345,7 @@ com.reasy.reasy = {
         var fixationDiv = doc.createElement('div');
 
         var incFixationDiv = doc.createElement('div');
-        incFixationDiv.onmousedown = function() { reasyIncFixation(reasyFixationText); }
+        incFixationDiv.onmousedown = function() { com.reasy.reasy.incFixation(reasyFixationText); }
         incFixationDiv.style.cursor = 'default';
         incFixationDiv.appendChild(doc.createTextNode('+'));
         fixationDiv.appendChild(incFixationDiv);
@@ -368,7 +354,7 @@ com.reasy.reasy = {
         fixationDiv.style.padding = '10px';
 
         var decFixationDiv = doc.createElement('div');
-        decFixationDiv.onmousedown = function() { reasyDecFixation(reasyFixationText); }
+        decFixationDiv.onmousedown = function() { com.reasy.reasy.decFixation(reasyFixationText); }
         decFixationDiv.style.cursor = 'default';
         decFixationDiv.appendChild(doc.createTextNode('-'));
         fixationDiv.appendChild(decFixationDiv);
@@ -425,11 +411,11 @@ com.reasy.reasy = {
             reasyHouseDiv.appendChild(textDiv);
         }
 
-        reasyHouseDiv.onmousedown = function(evt) { reasyHouseClicked(evt, reasyHouseDiv); };
+        reasyHouseDiv.onmousedown = function(evt) { com.reasy.reasy.houseClicked(evt, reasyHouseDiv); };
         reasyHouseDiv.onmouseup = function(evt) { com.reasy.reasy.mouseUp(evt, reasyHouseDiv); };
-        reasyHouseDiv.onmouseover = function(evt) { reasyMouseOver(evt, reasyHouseDiv); };
+        reasyHouseDiv.onmouseover = function(evt) { com.reasy.reasy.mouseOver(evt, reasyHouseDiv); };
 
-        setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
+        com.reasy.reasy.setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
 
         com.reasy.reasy.keyFn = function() { reasyReader.playPause(); };
         com.reasy.reasy.fwdFn = function() { reasyReader.fwd(); };
@@ -441,7 +427,7 @@ com.reasy.reasy = {
     select: function() {
         // get the text content if there is not an existing reasy session
         if (content && content.document && !content.document.getElementById(reasyHouseDivName)) {
-            var gotText = getIFrameSelection(content.document);
+            var gotText = com.reasy.reasy.getIFrameSelection(content.document);
 
             if (gotText) {
                 var split = gotText.split(/[-\u2013\u2014\s]/gi);
@@ -461,9 +447,10 @@ com.reasy.reasy = {
     },
 
     windowFocus: function(evt) {
+        if (!com.reasy.reasy.keyFn)
+            com.reasy.reasy.keyFn = com.reasy.reasy.select;
         if (reasy_db.auto_popup())
             content.document.addEventListener("mouseup", reasySelect, false);
-        com.reasy.reasy.keyFn = com.reasy.reasy.select;
         content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
     },
 
