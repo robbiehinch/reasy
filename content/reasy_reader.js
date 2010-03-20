@@ -1,25 +1,32 @@
-function reasy_reader(txt, reasyHtml, pre_post_mode, skip_count)
-{
-  this.txt = txt;
-  this.reasyHtml = reasyHtml;
-  this.position = 0;
-  this.last_punc_position = 0;
-  this.play = false;
-  this.set_node_text();
-  this.pre_post_mode = pre_post_mode;
-  this.skip_count = skip_count;
+
+if (!com) var com = {};
+if (!com.reasy) com.reasy = {};
+if (!com.reasy.reasy_reader) com.reasy.reasy_reader = {};
+
+com.reasy.reasy_reader = {
+
+  reader: function(txt, reasyHtml, pre_post_mode, skip_count) {
+    this.txt = txt;
+    this.reasyHtml = reasyHtml;
+    this.position = 0;
+    this.last_punc_position = 0;
+    this.play = false;
+    this.set_node_text();
+    this.pre_post_mode = pre_post_mode;
+    this.skip_count = skip_count;
+  }
 }
 
-reasy_reader.prototype.playPause = function()
+com.reasy.reasy_reader.reader.prototype.playPause = function()
 {
   this.play = !this.play;
   this.run();
 }
 
-reasy_reader.prototype.set_node_text = function()
+com.reasy.reasy_reader.reader.prototype.set_node_text = function()
 {
 	//the centre text
-	var fixation = reasy_db.fixation();
+	var fixation = com.reasy.reasy_db.singleton().fixation();
 	var textlen = this.txt.length;
 	var pos = this.position;
 	var txtArray = this.txt;
@@ -62,25 +69,25 @@ reasy_reader.prototype.set_node_text = function()
 	return /[\.,:;!\?]/.test(text);
 }
 
-reasy_reader.prototype.fwd = function()
+com.reasy.reasy_reader.reader.prototype.fwd = function()
 {
 	this.position = Math.min(this.txt.length-1, this.position + this.skip_count);
 	this.set_node_text();
 }
 
-reasy_reader.prototype.back = function()
+com.reasy.reasy_reader.reader.prototype.back = function()
 {
 	this.position = Math.max(0, this.position - this.skip_count);
 	this.set_node_text();
 }
 
-reasy_reader.prototype.run = function()
+com.reasy.reasy_reader.reader.prototype.run = function()
 {
   if (this.play)
   {
     var punctuation = this.set_node_text();
-    var fixation = reasy_db.fixation();
-    var ticker = reasy_db.ticker_tape();
+    var fixation = com.reasy.reasy_db.singleton().fixation();
+    var ticker = com.reasy.reasy_db.singleton().ticker_tape();
     var textlen = this.txt.length;
     
     if (ticker)
@@ -92,13 +99,13 @@ reasy_reader.prototype.run = function()
     if ((!ticker && position < (textlen + fixation))
 		|| (ticker && ((position + fixation) <= (textlen+1))))
     {
-		var time = reasy_db.read_interval();
+		var time = com.reasy.reasy_db.singleton().read_interval();
 		if (!ticker)
 			time *= fixation;
 
 		if (punctuation && ((position - this.last_punc_position) > fixation))
 		{
-			time += reasy_db.punc_pause();
+			time += com.reasy.reasy_db.singleton().punc_pause();
 			this.last_punc_position = position;
 		}
 
@@ -106,6 +113,6 @@ reasy_reader.prototype.run = function()
 		this.timeout_call = setTimeout(function(){self.run();}, time);
     }
     else
-      reasyClose();
+      com.reasy.reasy_reader.close();
   }
 }
