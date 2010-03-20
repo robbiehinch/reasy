@@ -14,44 +14,44 @@
     function reasy_prefs_load()
     {
         var elm = document.getElementById("reasy_font");
-        elm.value = reasy_db.fontFamily();
+        elm.value = com.reasy.reasy_db.singleton().fontFamily();
         elm = document.getElementById("reasy_font_size");
-        elm.value = parseInt(reasy_db.fontSize());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().fontSize());
         elm = document.getElementById("reasy_deselect_close");
-        elm.checked = reasy_db.deselect_close();
+        elm.checked = com.reasy.reasy_db.singleton().deselect_close();
         elm = document.getElementById("reasyAutoPlay");
-        elm.checked = reasy_db.auto_play();
+        elm.checked = com.reasy.reasy_db.singleton().auto_play();
         elm = document.getElementById("reasyTxtColor");
-        elm.color = reasy_db.getTxtColor();
+        elm.color = com.reasy.reasy_db.singleton().getTxtColor();
         elm = document.getElementById("reasyBkgColor");
-        elm.color = reasy_db.getBkgColor();
+        elm.color = com.reasy.reasy_db.singleton().getBkgColor();
         elm = document.getElementById("reasy_min_words");
-        elm.value = parseInt(reasy_db.minWords());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().minWords());
         elm = document.getElementById("reasy_punc_pause");
-        elm.value = parseInt(reasy_db.punc_pause());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().punc_pause());
         elm = document.getElementById("reasy_skip_count");
-        elm.value = parseInt(reasy_db.skip_count());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().skip_count());
         elm = document.getElementById("reasy_dim_background");
-        elm.value = parseInt(reasy_db.dim_background());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().dim_background());
         elm = document.getElementById("reasy_text_spacing");
-        elm.value = parseInt(reasy_db.get_text_border());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().get_text_border());
         elm = document.getElementById("reasy_multi_line_opacity");
-        elm.value = parseInt(reasy_db.multi_line_opacity());
+        elm.value = parseInt(com.reasy.reasy_db.singleton().multi_line_opacity());
         elm = document.getElementById("reasyActionKey");
-        elm.value = reasy_db.action_key();
+        elm.value = com.reasy.reasy_db.singleton().action_key();
         elm = document.getElementById("reasyFwdKey");
-        elm.value = reasy_db.fwd_key();
+        elm.value = com.reasy.reasy_db.singleton().fwd_key();
         elm = document.getElementById("reasyBackKey");
-        elm.value = reasy_db.back_key();
+        elm.value = com.reasy.reasy_db.singleton().back_key();
 		elm = document.getElementById("reasyTicker");
-		elm.checked = reasy_db.ticker_tape();
+		elm.checked = com.reasy.reasy_db.singleton().ticker_tape();
 		elm = document.getElementById("reasyAutoPopup");
-		elm.checked = reasy_db.auto_popup();
+		elm.checked = com.reasy.reasy_db.singleton().auto_popup();
 		elm = document.getElementById("reasyPrePost");
-		var pre_post = reasy_db.pre_post();
+		var pre_post = com.reasy.reasy_db.singleton().pre_post();
 		elm.checked = pre_post;
 		elm = document.getElementById("reasyLiveInk");
-		elm.checked = reasy_db.live_ink();
+		elm.checked = com.reasy.reasy_db.singleton().live_ink();
 		enableLiveInk(pre_post);
 		enableMultilineOpacity(pre_post);
     }
@@ -59,31 +59,31 @@
     function reasy_prefs_accept()
     {
         var elm = document.getElementById("reasy_font");
-        reasy_db.setFontFamily(elm.value);
+        com.reasy.reasy_db.singleton().setFontFamily(elm.value);
         elm = document.getElementById("reasy_font_size");
-        reasy_db.setFontSize(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().setFontSize(parseInt(elm.value));
         elm = document.getElementById("reasyTxtColor");
-        reasy_db.setTxtColor(elm.color);
+        com.reasy.reasy_db.singleton().setTxtColor(elm.color);
         elm = document.getElementById("reasyBkgColor");
-        reasy_db.setBkgColor(elm.color);
+        com.reasy.reasy_db.singleton().setBkgColor(elm.color);
         elm = document.getElementById("reasy_min_words");
-        reasy_db.setMinWords(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().setMinWords(parseInt(elm.value));
         elm = document.getElementById("reasy_skip_count");
-        reasy_db.setSkipCount(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().setSkipCount(parseInt(elm.value));
         elm = document.getElementById("reasy_punc_pause");
-        reasy_db.setPuncPause(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().setPuncPause(parseInt(elm.value));
         elm = document.getElementById("reasy_dim_background");
-        reasy_db.set_dim_background(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().set_dim_background(parseInt(elm.value));
         elm = document.getElementById("reasy_text_spacing");
-        reasy_db.set_text_border(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().set_text_border(parseInt(elm.value));
         elm = document.getElementById("reasy_multi_line_opacity");
-        reasy_db.set_multi_line_opacity(parseInt(elm.value));
+        com.reasy.reasy_db.singleton().set_multi_line_opacity(parseInt(elm.value));
         elm = document.getElementById("reasyActionKey");
-        reasy_db.set_action_key(elm.value.toUpperCase().charAt(0));
+        com.reasy.reasy_db.singleton().set_action_key(elm.value.toUpperCase().charAt(0));
         elm = document.getElementById("reasyFwdKey");
-        reasy_db.set_fwd_key(elm.value.toUpperCase().charAt(0));
+        com.reasy.reasy_db.singleton().set_fwd_key(elm.value.toUpperCase().charAt(0));
         elm = document.getElementById("reasyBackKey");
-        reasy_db.set_back_key(elm.value.toUpperCase().charAt(0));
+        com.reasy.reasy_db.singleton().set_back_key(elm.value.toUpperCase().charAt(0));
     }
     
     function enableMultilineOpacity(val)
@@ -102,8 +102,8 @@
     
     function reasyPrePostCommand()
     {
-		reasy_db.pre_post_invert();
-		var enable = reasy_db.pre_post();
+		com.reasy.reasy_db.singleton().pre_post_invert();
+		var enable = com.reasy.reasy_db.singleton().pre_post();
 		enableLiveInk(enable);
 		enableMultilineOpacity(enable);
 	}
@@ -123,15 +123,15 @@
 
 				<checkbox id="reasy_deselect_close"
 					label="deselect text on close" 
-					oncommand="reasy_db.deselect_close_invert()" />
+					oncommand="com.reasy.reasy_db.singleton().deselect_close_invert()" />
 
 				<checkbox id="reasyAutoPlay"
 					label="auto play" 
-					oncommand="reasy_db.auto_play_invert()" />
+					oncommand="com.reasy.reasy_db.singleton().auto_play_invert()" />
 
 				<checkbox id="reasyTicker"
 					label="ticker tape" 
-					oncommand="reasy_db.ticker_tape_invert()" />
+					oncommand="com.reasy.reasy_db.singleton().ticker_tape_invert()" />
 				
 				<checkbox id="reasyPrePost"
 					label="Show leading and trailing line" 
@@ -142,7 +142,7 @@
 
 				<checkbox id="reasyLiveInk"
 					label="Live Ink pseudo-emulator" 
-					oncommand="reasy_db.live_ink_invert()" />
+					oncommand="com.reasy.reasy_db.singleton().live_ink_invert()" />
 				
 				<label value="Punctuation pause (ms):" />
 				<textbox type="number" min="0" max="250" id="reasy_punc_pause" />
@@ -169,7 +169,7 @@
 
 				<checkbox id="reasyAutoPopup"
 					label="display immediately" 
-					oncommand="reasy_db.invert_auto_popup()" />
+					oncommand="com.reasy.reasy_db.singleton().invert_auto_popup()" />
 				<label value="after selecting how many words:" />
 				<textbox type="number" min="10" id="reasy_min_words" />
 

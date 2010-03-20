@@ -426,12 +426,12 @@ com.reasy.reasy = {
     if (!com.reasy.reasy.keyFn)
       com.reasy.reasy.keyFn = com.reasy.reasy.select;
     if (com.reasy.reasy_db.singleton().auto_popup())
-      content.document.addEventListener("mouseup", reasySelect, false);
+      content.document.addEventListener("mouseup", com.reasy.reasy.select, false);
     content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
   },
 
   windowUnload: function(evt) {
-    content.document.removeEventListener("mouseup", reasySelect, false);
+    content.document.removeEventListener("mouseup", com.reasy.reasy.select, false);
     content.document.removeEventListener("keydown", com.reasy.reasy.keyDown, false);
   }
 }
