@@ -460,28 +460,32 @@ function reasySelect()
 	}
 }
 
-function reasyKeyDown(evt)
-{
-	if (reasy_db.action_key().charCodeAt(0) == evt.which)
-		reasyKeyFn();
-	else if ((reasy_db.fwd_key().charCodeAt(0) == evt.which) && reasyFwdFn)
-		reasyFwdFn();
-	else if ((reasy_db.back_key().charCodeAt(0) == evt.which) && reasyBackFn)
-		reasyBackFn();
+if (!com) var com = {};
+if (!com.reasy) com.reasy = {};
+if (!com.reasy.reasy) com.reasy.reasy = {};
+
+com.reasy.reasy = {
+
+    keyDown: function(evt) {
+	    if (reasy_db.action_key().charCodeAt(0) == evt.which)
+		    reasyKeyFn();
+	    else if ((reasy_db.fwd_key().charCodeAt(0) == evt.which) && reasyFwdFn)
+		    reasyFwdFn();
+	    else if ((reasy_db.back_key().charCodeAt(0) == evt.which) && reasyBackFn)
+		    reasyBackFn();
+    },
+
+    windowFocus: function(evt) {
+        if (reasy_db.auto_popup())
+            content.document.addEventListener("mouseup", reasySelect, false);
+        content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
+    },
+
+    windowUnload: function(evt) {
+        content.document.removeEventListener("mouseup", reasySelect, false);
+        content.document.removeEventListener("keydown", com.reasy.reasy.keyDown, false);
+    }
 }
 
-function reasyWindowFocus(evt)
-{
-	if (reasy_db.auto_popup())
-		content.document.addEventListener("mouseup", reasySelect, false);
-	content.document.addEventListener("keydown", reasyKeyDown, false);
-}
-
-function reasyWindowUnload(evt)
-{
-	content.document.removeEventListener("mouseup", reasySelect, false);
-	content.document.removeEventListener("keydown", reasyKeyDown, false);
-}
-
-window.addEventListener("focus", reasyWindowFocus, true);
-window.addEventListener("unload", reasyWindowUnload, true);
+window.addEventListener("focus", com.reasy.reasy.windowFocus, true);
+window.addEventListener("unload", com.reasy.reasy.windowUnload, true);
