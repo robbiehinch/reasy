@@ -1,41 +1,4 @@
-var reasyHouseDivName = 'reasyHouseTextDiv';
-var reasyOpaqueBGName = 'reasyOpaqueBG';
-var sFirefox = "Firefox";
-var firefox_pos = navigator.userAgent.indexOf(sFirefox);
-firefox_pos += sFirefox.length + 1;
-var ver_string = navigator.userAgent.substring(firefox_pos).split(' ')[0];
-var major_ver = parseInt(ver_string);
 
-//FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
-//Firebug.Console.log("hello");
-
-
-function XY(x, y)
-{
-	this.x = x;
-	this.y = y;
-}
-
-XY.prototype.getX = function()
-{
-	return this.x;
-}
-
-XY.prototype.getY = function()
-{
-	return this.y;
-}
-
-XY.prototype.change = function(x, y)
-{
-	this.x = x;
-	this.y = y;
-}
-
-XY.prototype.diff_coords = function(x, y)
-{
-	return this.x != x || this.y != y;
-}
 
 if (!com) var com = {};
 if (!com.reasy) com.reasy = {};
@@ -43,12 +6,31 @@ if (!com.reasy.reasy) com.reasy.reasy = {};
 
 com.reasy.reasy = {
 
+    houseDivName: 'reasyHouseTextDiv',
+    opaqueBGName: 'reasyOpaqueBG',
+    major_ver: null,
+
+//FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
+//Firebug.Console.log("hello");
+
+    XY: function XY(x, y) {
+	    this.x = x;
+	    this.y = y;
+    },
+
     getContentSelectedText: function (doc) {
         if (!doc)
             return "";
+            
+        if (!com.reasy.reasy.major_ver)
+        {
+            var ua = navigator.userAgent;
+            var ver_index = ua.indexOf("Firefox") + "Firefox".length + 1;
+            com.reasy.reasy.major_ver = parseInt(ua.substring(ver_index).split(' ')[0]);
+        }
 
         var gotText = doc.getSelection();
-        if (major_ver > 2)
+        if (com.reasy.reasy.major_ver > 2)
             gotText = gotText.toString();
 
         return gotText;
@@ -159,7 +141,7 @@ com.reasy.reasy = {
 
 	    if (fn == com.reasy.reasy.moveFunction)
 		    div.style.cursor = 'move';
-	    myXY = new XY(x, y);
+	    myXY = new com.reasy.reasy.XY(x, y);
 	    div.onmousemove = function(newevt){com.reasy.reasy.mouseMove(newevt, myXY, div, fn);};
 
 	    content.document.addEventListener("mousemove"
@@ -223,11 +205,11 @@ com.reasy.reasy = {
     },
 
     close: function(evt, div) {
-        var reasyDiv = content.document.getElementById(reasyHouseDivName);
+        var reasyDiv = content.document.getElementById(com.reasy.reasy.houseDivName);
         if (reasyDiv)
             content.document.body.removeChild(reasyDiv);
 
-        var bg = content.document.getElementById(reasyOpaqueBGName);
+        var bg = content.document.getElementById(com.reasy.reasy.opaqueBGName);
         if (bg)
             content.document.body.removeChild(bg);
 
@@ -253,7 +235,7 @@ com.reasy.reasy = {
     createDom: function(doc, reasySplit) {
         //make reasy housing div
         var reasyHouseDiv = doc.createElement('div');
-        reasyHouseDiv.setAttribute('id', reasyHouseDivName);
+        reasyHouseDiv.setAttribute('id', com.reasy.reasy.houseDivName);
         reasyHouseDiv.style.position = 'fixed';
 
         var db_top = reasy_db.top();
@@ -309,8 +291,8 @@ com.reasy.reasy = {
             opaque_bg.style.opacity = parseFloat(background_opacity) / 100.0;
             opaque_bg.style.zIndex = 9;
             reasy_db.bkgColor(opaque_bg);
-            opaque_bg.setAttribute('id', reasyOpaqueBGName);
-            com.reasy.reasy.setOrReplaceNode(reasyOpaqueBGName, opaque_bg);
+            opaque_bg.setAttribute('id', com.reasy.reasy.opaqueBGName);
+            com.reasy.reasy.setOrReplaceNode(com.reasy.reasy.opaqueBGName, opaque_bg);
         }
 
         // make settings text div
@@ -415,7 +397,7 @@ com.reasy.reasy = {
         reasyHouseDiv.onmouseup = function(evt) { com.reasy.reasy.mouseUp(evt, reasyHouseDiv); };
         reasyHouseDiv.onmouseover = function(evt) { com.reasy.reasy.mouseOver(evt, reasyHouseDiv); };
 
-        com.reasy.reasy.setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
+        com.reasy.reasy.setOrReplaceNode(com.reasy.reasy.houseDivName, reasyHouseDiv);
 
         com.reasy.reasy.keyFn = function() { reasyReader.playPause(); };
         com.reasy.reasy.fwdFn = function() { reasyReader.fwd(); };
@@ -426,7 +408,7 @@ com.reasy.reasy = {
 
     select: function() {
         // get the text content if there is not an existing reasy session
-        if (content && content.document && !content.document.getElementById(reasyHouseDivName)) {
+        if (content && content.document && !content.document.getElementById(com.reasy.reasy.houseDivName)) {
             var gotText = com.reasy.reasy.getIFrameSelection(content.document);
 
             if (gotText) {
@@ -459,6 +441,24 @@ com.reasy.reasy = {
         content.document.removeEventListener("keydown", com.reasy.reasy.keyDown, false);
     }
 }
+
+com.reasy.reasy.XY.prototype.getX = function() {
+    return this.x;
+}
+
+com.reasy.reasy.XY.prototype.getY = function() {
+    return this.y;
+}
+
+com.reasy.reasy.XY.prototype.change = function(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+com.reasy.reasy.XY.prototype.diff_coords = function(x, y) {
+    return this.x != x || this.y != y;
+}
+
 
 window.addEventListener("focus", com.reasy.reasy.windowFocus, true);
 window.addEventListener("unload", com.reasy.reasy.windowUnload, true);
