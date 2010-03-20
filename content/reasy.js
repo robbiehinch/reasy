@@ -5,9 +5,6 @@ var firefox_pos = navigator.userAgent.indexOf(sFirefox);
 firefox_pos += sFirefox.length + 1;
 var ver_string = navigator.userAgent.substring(firefox_pos).split(' ')[0];
 var major_ver = parseInt(ver_string);
-var reasyKeyFn = reasySelect;
-var reasyFwdFn = null;
-var reasyBackFn = null;
 
 //FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
 //Firebug.Console.log("hello");
@@ -40,6 +37,36 @@ XY.prototype.diff_coords = function(x, y)
 	return this.x != x || this.y != y;
 }
 
+function getContentSelectedText(doc) {
+    if (!doc)
+        return "";
+
+    var gotText = doc.getSelection();
+    if (major_ver > 2)
+        gotText = gotText.toString();
+
+    return gotText;
+}
+
+function getIFrameSelection(doc) {
+    var ret = getContentSelectedText(doc);
+    for (var f in window.frames) {
+        if (f.contentWindow) {
+            //			Firebug.Console.log("frame.contentWindow");
+            ret += getContentSelectedText(f.contentWindow);
+        }
+        if (f.document) {
+            //			Firebug.Console.log("frame.document");
+            ret += getContentSelectedText(f.document);
+        }
+        if (f.contentDocument) {
+            //			Firebug.Console.log("frame.contentDocument");
+            ret += getContentSelectedText(f.contentDocument);
+        }
+    }
+    return ret;
+}
+
 function setOrReplaceNode(nodeName, node)
 {
 	// replace the old div or add the div to the document
@@ -56,30 +83,6 @@ function setOrReplaceNode(nodeName, node)
 		content.document.body.appendChild(node);
 }
 
-function reasyClose(evt, div)
-{
-	var reasyDiv = content.document.getElementById(reasyHouseDivName);
-	if (reasyDiv)
-		content.document.body.removeChild(reasyDiv);
-
-	var bg = content.document.getElementById(reasyOpaqueBGName);
-	if (bg)
-		content.document.body.removeChild(bg);
-
-	if (div || reasy_db.deselect_close())	//div is valid on forced close
-	{
-		var sel = content.window.getSelection();
-		if (sel && sel.removeAllRanges)
-			sel.removeAllRanges();
-	}
-
-	reasyKeyFn = reasySelect;
-	reasyFwdFn = null;
-	reasyBackFn = null;
-		
-	if (div)
-		reasyMouseUp(evt, div);
-}
 
 function reasyMoveFunction(evt, div, old_x, old_y)
 {
@@ -139,18 +142,6 @@ function reasyMouseMove(evt, myXY, div, move_fn)
 			move_fn(evt, div, myXY.getX(), myXY.getY());
 		myXY.change(nx, ny);
 	}
-}
-
-function reasyMouseUp(evt, div)
-{
-	div.style.cursor = 'default';
-	content.document.removeEventListener("mousemove"
-		, div.onmousemove
-		, false);
-	content.document.removeEventListener("mouseup"
-		, div.onmouseup
-		, false);
-	div.onmousemove = null;
 }
 
 function reasyHouseClicked(evt, div)
@@ -228,256 +219,251 @@ function reasyDecFixation(reasyFixationText)
 	reasyFixationText.nodeValue = reasy_db.fixation();
 }
 
-function createReasyDom(doc, reasySplit)
-{
-	//make reasy housing div
-	var reasyHouseDiv = doc.createElement('div');
-	reasyHouseDiv.setAttribute('id', reasyHouseDivName);
-	reasyHouseDiv.style.position = 'fixed';
-
-	var db_top = reasy_db.top();
-	if (db_top < -100)
-		db_top = doc.height/5;
-	reasyHouseDiv.style.top = db_top + 'px';
-	var db_left = reasy_db.left();
-	if (db_left < -100)
-		db_left = doc.width/5;
-	reasyHouseDiv.style.left = db_left + 'px';
-	var db_height = reasy_db.height();
-	if (db_height <= 0)
-		db_height = db_top*3;
-	reasyHouseDiv.style.height = db_height + 'px';
-	var db_width = reasy_db.width();
-	if (db_width <= 0)
-		db_width = db_left*3;
-	reasyHouseDiv.style.width = db_width + 'px';
-	reasyHouseDiv.style.zIndex = 10;
-	reasy_db.bkgColor(reasyHouseDiv);
-	reasy_db.txtColor(reasyHouseDiv);
-	
-	var menuDiv = doc.createElement('div');
-	menuDiv.style.fontSize = '16px';
-	menuDiv.style.fontFamily = 'Verdana';
-	menuDiv.style.color = 'silver';
-	menuDiv.style.padding = '10px';
-	reasyHouseDiv.appendChild(menuDiv);
-
-	var background_opacity = reasy_db.dim_background();
-	if (0 == background_opacity)
-	{
-		// create menu/close button div
-		var closeButton = doc.createElement('button');
-		closeButton.onmouseup = function(evt){reasyClose(evt, reasyHouseDiv);};
-		closeButton.style.cursor = 'default';
-		closeButton.appendChild(doc.createTextNode('x'));
-		closeButton.style.width = '20px';
-		closeButton.style.height = '20px';
-		closeButton.style.cssFloat = 'left';
-		closeButton.style.fontWeight = 'bold';
-		closeButton.style.borderStyle = 'none';
-		menuDiv.appendChild(closeButton);
-	}
-	else
-	{
-		//cover background with opaque overlay
-		var opaque_bg = doc.createElement('div');
-		opaque_bg.onmouseup = function(evt){reasyClose(evt, reasyHouseDiv);};
-		opaque_bg.style.width = '100%';
-		opaque_bg.style.height = '100%';
-		opaque_bg.style.position = 'fixed';
-		opaque_bg.style.top = '0px';
-		opaque_bg.style.left = '0px';
-		opaque_bg.style.opacity = parseFloat(background_opacity)/100.0;
-		opaque_bg.style.zIndex = 9;
-		reasy_db.bkgColor(opaque_bg);
-		opaque_bg.setAttribute('id', reasyOpaqueBGName);
-		setOrReplaceNode(reasyOpaqueBGName, opaque_bg);
-	}
-
-	// make settings text div
-	var settingsDiv = doc.createElement('div');
-	reasy_db.txtColor(settingsDiv);
-	settingsDiv.style.fontSize = '16px';
-	settingsDiv.style.fontWeight = 'bold';
-	settingsDiv.style.fontFamily = 'Tahoma';
-
-	//wpm
-	var wpmDiv = doc.createElement('div');
-	var reasyWPMText = doc.createTextNode(reasy_db.wpm());
-	{
-		var incWpmDiv = doc.createElement('div');
-		incWpmDiv.onmousedown = function(){reasyIncWPM(reasyWPMText);}
-		incWpmDiv.appendChild(doc.createTextNode('+'));
-		incWpmDiv.style.cursor = 'default';
-		wpmDiv.appendChild(incWpmDiv);
-	}
-	
-	wpmDiv.appendChild(reasyWPMText);
-	wpmDiv.style.padding = '10px';
-
-	var decWpmDiv = doc.createElement('div');
-	decWpmDiv.onmousedown = function(){reasyDecWPM(reasyWPMText);}
-	decWpmDiv.appendChild(doc.createTextNode('-'));
-	decWpmDiv.style.cursor = 'default';
-	wpmDiv.appendChild(decWpmDiv);
-	settingsDiv.appendChild(wpmDiv)
-	//fixation
-	var reasyFixationText = doc.createTextNode(reasy_db.fixation());
-	var fixationDiv = doc.createElement('div');
-
-	var incFixationDiv = doc.createElement('div');
-	incFixationDiv.onmousedown = function(){reasyIncFixation(reasyFixationText);}
-	incFixationDiv.style.cursor = 'default';
-	incFixationDiv.appendChild(doc.createTextNode('+'));
-	fixationDiv.appendChild(incFixationDiv);
-
-	fixationDiv.appendChild(reasyFixationText);
-	fixationDiv.style.padding = '10px';
-	
-	var decFixationDiv = doc.createElement('div');
-	decFixationDiv.onmousedown = function(){reasyDecFixation(reasyFixationText);}
-	decFixationDiv.style.cursor = 'default';
-	decFixationDiv.appendChild(doc.createTextNode('-'));
-	fixationDiv.appendChild(decFixationDiv);
-	settingsDiv.appendChild(fixationDiv);
-
-	//add settings to reasy house
-	reasyHouseDiv.appendChild(settingsDiv);
-
-	// make reasy text div
-	var reasyDiv = new Array();
-	reasyDiv[0] = doc.createTextNode(' ');
-	var pre_post_mode = reasy_db.pre_post();
-	if (pre_post_mode)
-	{
-		reasyDiv[1] = doc.createTextNode(' ');
-		reasyDiv[2] = doc.createTextNode(' ');
-	}
-	
-	var reasyReader = new reasy_reader(reasySplit, reasyDiv, pre_post_mode, reasy_db.skip_count());
-
-	var paddingDiv = doc.createElement('div');
-	paddingDiv.style.height = '38%';
-	reasyHouseDiv.appendChild(paddingDiv);
-
-	var bwidth = reasy_db.get_text_border();
-	for (i=0;i<reasyDiv.length;i++)
-	{
-		var textDiv = doc.createElement('div');
-		reasy_db.txtColor(textDiv);
-		textDiv.style.clear = 'both';
-		textDiv.style.cssFloat = 'left';
-		textDiv.style.width = '100%';
-		textDiv.style.fontSize = reasy_db.fontSize();
-		textDiv.style.fontFamily = reasy_db.fontFamily();
-		if (!pre_post_mode)
-			textDiv.style.textAlign = 'center';
-		else
-		{
-			textDiv.style.textAlign = 'left';
-			textDiv.style.position = 'relative';
-			if (reasy_db.live_ink())
-				textDiv.style.left = db_left + 50*(i-1) + 'px';
-			else
-				textDiv.style.left = db_left - 50 + 'px';
-				
-			if (0 == i%2)	// set opacity of leading and trailing lines
-			{
-				var opacity = reasy_db.multi_line_opacity();
-				if (opacity > 0)
-					textDiv.style.opacity = parseFloat()/100.0;
-			}
-			textDiv.style.padding = bwidth;
-		}
-		textDiv.appendChild(reasyDiv[i]);
-		textDiv.onmousedown = function(){reasyReader.playPause();};
-		textDiv.style.cursor = 'default';
-		reasyHouseDiv.appendChild(textDiv);
-	}
-
-	reasyHouseDiv.onmousedown = function(evt){reasyHouseClicked(evt, reasyHouseDiv);};
-	reasyHouseDiv.onmouseup = function(evt){reasyMouseUp(evt, reasyHouseDiv);};
-	reasyHouseDiv.onmouseover = function(evt){reasyMouseOver(evt, reasyHouseDiv);};
-
-	setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
-	
-	reasyKeyFn = function(){reasyReader.playPause();};
-	reasyFwdFn = function(){reasyReader.fwd();};
-	reasyBackFn = function(){reasyReader.back();};
-	if (reasy_db.auto_play())
-		reasyReader.playPause();;
-}
-
-function getContentSelectedText(doc)
-{
-	if (!doc)
-		return "";
-	
-	var gotText = doc.getSelection();
-	if (major_ver > 2)
-		gotText = gotText.toString();
-	
-	return gotText;
-}
-
-function getIFrameSelection(doc)
-{
-	var ret = getContentSelectedText(doc);
-	for (var f in window.frames)
-	{
-		if (f.contentWindow)
-		{
-//			Firebug.Console.log("frame.contentWindow");
-			ret += getContentSelectedText(f.contentWindow);
-		}
-		if (f.document)
-		{
-//			Firebug.Console.log("frame.document");
-			ret += getContentSelectedText(f.document);
-		}
-		if (f.contentDocument)
-		{
-//			Firebug.Console.log("frame.contentDocument");
-			ret += getContentSelectedText(f.contentDocument);
-		}
-	}
-	return ret;
-}
-
-function reasySelect()
-{
-	// get the text content if there is not an existing reasy session
-	if (content && content.document && !content.document.getElementById(reasyHouseDivName))
-	{
-		var gotText = getIFrameSelection(content.document);
-
-		if (gotText)
-		{
-			var reasySplit = gotText.split(/[-\u2013\u2014\s]/gi);
-			if (reasySplit && reasySplit.length >= reasy_db.minWords())
-				createReasyDom(document, reasySplit);
-		}
-	}
-}
-
 if (!com) var com = {};
 if (!com.reasy) com.reasy = {};
 if (!com.reasy.reasy) com.reasy.reasy = {};
 
 com.reasy.reasy = {
 
+    mouseUp: function(evt, div) {
+        div.style.cursor = 'default';
+        content.document.removeEventListener("mousemove"
+		    , div.onmousemove
+		    , false);
+        content.document.removeEventListener("mouseup"
+		    , div.onmouseup
+		    , false);
+        div.onmousemove = null;
+    },
+
+    close: function(evt, div) {
+        var reasyDiv = content.document.getElementById(reasyHouseDivName);
+        if (reasyDiv)
+            content.document.body.removeChild(reasyDiv);
+
+        var bg = content.document.getElementById(reasyOpaqueBGName);
+        if (bg)
+            content.document.body.removeChild(bg);
+
+        if (div || reasy_db.deselect_close())	//div is valid on forced close
+        {
+            var sel = content.window.getSelection();
+            if (sel && sel.removeAllRanges)
+                sel.removeAllRanges();
+        }
+
+        com.reasy.reasy.keyFn = com.reasy.reasy.reasySelect;
+        com.reasy.reasy.fwdFn = null;
+        com.reasy.reasy.backFn = null;
+
+        if (div)
+            com.reasy.reasy.mouseUp(evt, div);
+    },
+
+    keyFn: null,
+    fwdFn: null,
+    backFn: null,
+
+    createDom: function(doc, reasySplit) {
+        //make reasy housing div
+        var reasyHouseDiv = doc.createElement('div');
+        reasyHouseDiv.setAttribute('id', reasyHouseDivName);
+        reasyHouseDiv.style.position = 'fixed';
+
+        var db_top = reasy_db.top();
+        if (db_top < -100)
+            db_top = doc.height / 5;
+        reasyHouseDiv.style.top = db_top + 'px';
+        var db_left = reasy_db.left();
+        if (db_left < -100)
+            db_left = doc.width / 5;
+        reasyHouseDiv.style.left = db_left + 'px';
+        var db_height = reasy_db.height();
+        if (db_height <= 0)
+            db_height = db_top * 3;
+        reasyHouseDiv.style.height = db_height + 'px';
+        var db_width = reasy_db.width();
+        if (db_width <= 0)
+            db_width = db_left * 3;
+        reasyHouseDiv.style.width = db_width + 'px';
+        reasyHouseDiv.style.zIndex = 10;
+        reasy_db.bkgColor(reasyHouseDiv);
+        reasy_db.txtColor(reasyHouseDiv);
+
+        var menuDiv = doc.createElement('div');
+        menuDiv.style.fontSize = '16px';
+        menuDiv.style.fontFamily = 'Verdana';
+        menuDiv.style.color = 'silver';
+        menuDiv.style.padding = '10px';
+        reasyHouseDiv.appendChild(menuDiv);
+
+        var background_opacity = reasy_db.dim_background();
+        if (0 == background_opacity) {
+            // create menu/close button div
+            var closeButton = doc.createElement('button');
+            closeButton.onmouseup = function(evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
+            closeButton.style.cursor = 'default';
+            closeButton.appendChild(doc.createTextNode('x'));
+            closeButton.style.width = '20px';
+            closeButton.style.height = '20px';
+            closeButton.style.cssFloat = 'left';
+            closeButton.style.fontWeight = 'bold';
+            closeButton.style.borderStyle = 'none';
+            menuDiv.appendChild(closeButton);
+        }
+        else {
+            //cover background with opaque overlay
+            var opaque_bg = doc.createElement('div');
+            opaque_bg.onmouseup = function(evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
+            opaque_bg.style.width = '100%';
+            opaque_bg.style.height = '100%';
+            opaque_bg.style.position = 'fixed';
+            opaque_bg.style.top = '0px';
+            opaque_bg.style.left = '0px';
+            opaque_bg.style.opacity = parseFloat(background_opacity) / 100.0;
+            opaque_bg.style.zIndex = 9;
+            reasy_db.bkgColor(opaque_bg);
+            opaque_bg.setAttribute('id', reasyOpaqueBGName);
+            setOrReplaceNode(reasyOpaqueBGName, opaque_bg);
+        }
+
+        // make settings text div
+        var settingsDiv = doc.createElement('div');
+        reasy_db.txtColor(settingsDiv);
+        settingsDiv.style.fontSize = '16px';
+        settingsDiv.style.fontWeight = 'bold';
+        settingsDiv.style.fontFamily = 'Tahoma';
+
+        //wpm
+        var wpmDiv = doc.createElement('div');
+        var reasyWPMText = doc.createTextNode(reasy_db.wpm());
+        {
+            var incWpmDiv = doc.createElement('div');
+            incWpmDiv.onmousedown = function() { reasyIncWPM(reasyWPMText); }
+            incWpmDiv.appendChild(doc.createTextNode('+'));
+            incWpmDiv.style.cursor = 'default';
+            wpmDiv.appendChild(incWpmDiv);
+        }
+
+        wpmDiv.appendChild(reasyWPMText);
+        wpmDiv.style.padding = '10px';
+
+        var decWpmDiv = doc.createElement('div');
+        decWpmDiv.onmousedown = function() { reasyDecWPM(reasyWPMText); }
+        decWpmDiv.appendChild(doc.createTextNode('-'));
+        decWpmDiv.style.cursor = 'default';
+        wpmDiv.appendChild(decWpmDiv);
+        settingsDiv.appendChild(wpmDiv)
+        //fixation
+        var reasyFixationText = doc.createTextNode(reasy_db.fixation());
+        var fixationDiv = doc.createElement('div');
+
+        var incFixationDiv = doc.createElement('div');
+        incFixationDiv.onmousedown = function() { reasyIncFixation(reasyFixationText); }
+        incFixationDiv.style.cursor = 'default';
+        incFixationDiv.appendChild(doc.createTextNode('+'));
+        fixationDiv.appendChild(incFixationDiv);
+
+        fixationDiv.appendChild(reasyFixationText);
+        fixationDiv.style.padding = '10px';
+
+        var decFixationDiv = doc.createElement('div');
+        decFixationDiv.onmousedown = function() { reasyDecFixation(reasyFixationText); }
+        decFixationDiv.style.cursor = 'default';
+        decFixationDiv.appendChild(doc.createTextNode('-'));
+        fixationDiv.appendChild(decFixationDiv);
+        settingsDiv.appendChild(fixationDiv);
+
+        //add settings to reasy house
+        reasyHouseDiv.appendChild(settingsDiv);
+
+        // make reasy text div
+        var reasyDiv = new Array();
+        reasyDiv[0] = doc.createTextNode(' ');
+        var pre_post_mode = reasy_db.pre_post();
+        if (pre_post_mode) {
+            reasyDiv[1] = doc.createTextNode(' ');
+            reasyDiv[2] = doc.createTextNode(' ');
+        }
+
+        var reasyReader = new reasy_reader(reasySplit, reasyDiv, pre_post_mode, reasy_db.skip_count());
+
+        var paddingDiv = doc.createElement('div');
+        paddingDiv.style.height = '38%';
+        reasyHouseDiv.appendChild(paddingDiv);
+
+        var bwidth = reasy_db.get_text_border();
+        for (i = 0; i < reasyDiv.length; i++) {
+            var textDiv = doc.createElement('div');
+            reasy_db.txtColor(textDiv);
+            textDiv.style.clear = 'both';
+            textDiv.style.cssFloat = 'left';
+            textDiv.style.width = '100%';
+            textDiv.style.fontSize = reasy_db.fontSize();
+            textDiv.style.fontFamily = reasy_db.fontFamily();
+            if (!pre_post_mode)
+                textDiv.style.textAlign = 'center';
+            else {
+                textDiv.style.textAlign = 'left';
+                textDiv.style.position = 'relative';
+                if (reasy_db.live_ink())
+                    textDiv.style.left = db_left + 50 * (i - 1) + 'px';
+                else
+                    textDiv.style.left = db_left - 50 + 'px';
+
+                if (0 == i % 2)	// set opacity of leading and trailing lines
+                {
+                    var opacity = reasy_db.multi_line_opacity();
+                    if (opacity > 0)
+                        textDiv.style.opacity = parseFloat() / 100.0;
+                }
+                textDiv.style.padding = bwidth;
+            }
+            textDiv.appendChild(reasyDiv[i]);
+            textDiv.onmousedown = function() { reasyReader.playPause(); };
+            textDiv.style.cursor = 'default';
+            reasyHouseDiv.appendChild(textDiv);
+        }
+
+        reasyHouseDiv.onmousedown = function(evt) { reasyHouseClicked(evt, reasyHouseDiv); };
+        reasyHouseDiv.onmouseup = function(evt) { com.reasy.reasy.mouseUp(evt, reasyHouseDiv); };
+        reasyHouseDiv.onmouseover = function(evt) { reasyMouseOver(evt, reasyHouseDiv); };
+
+        setOrReplaceNode(reasyHouseDivName, reasyHouseDiv);
+
+        com.reasy.reasy.keyFn = function() { reasyReader.playPause(); };
+        com.reasy.reasy.fwdFn = function() { reasyReader.fwd(); };
+        com.reasy.reasy.backFn = function() { reasyReader.back(); };
+        if (reasy_db.auto_play())
+            reasyReader.playPause(); ;
+    },
+
+    select: function() {
+        // get the text content if there is not an existing reasy session
+        if (content && content.document && !content.document.getElementById(reasyHouseDivName)) {
+            var gotText = getIFrameSelection(content.document);
+
+            if (gotText) {
+                var split = gotText.split(/[-\u2013\u2014\s]/gi);
+                if (split && split.length >= reasy_db.minWords())
+                    com.reasy.reasy.createDom(document, split);
+            }
+        }
+    },
+
     keyDown: function(evt) {
-	    if (reasy_db.action_key().charCodeAt(0) == evt.which)
-		    reasyKeyFn();
-	    else if ((reasy_db.fwd_key().charCodeAt(0) == evt.which) && reasyFwdFn)
-		    reasyFwdFn();
-	    else if ((reasy_db.back_key().charCodeAt(0) == evt.which) && reasyBackFn)
-		    reasyBackFn();
+        if (reasy_db.action_key().charCodeAt(0) == evt.which)
+            com.reasy.reasy.keyFn();
+        else if ((reasy_db.fwd_key().charCodeAt(0) == evt.which) && com.reasy.reasy.fwdFn)
+            com.reasy.reasy.fwdFn();
+        else if ((reasy_db.back_key().charCodeAt(0) == evt.which) && com.reasy.reasy.backFn)
+            com.reasy.reasy.backFn();
     },
 
     windowFocus: function(evt) {
         if (reasy_db.auto_popup())
             content.document.addEventListener("mouseup", reasySelect, false);
+        com.reasy.reasy.keyFn = com.reasy.reasy.select;
         content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
     },
 
