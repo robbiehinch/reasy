@@ -25,7 +25,7 @@
 
     <checkbox id="ticker" label="ticker tape" preference="pref_ticker" />
 
-    <checkbox id="pre_post" label="Show leading and trailing line" preference="pre_post" />
+    <checkbox id="pre_post" label="Show leading and trailing line" preference="pref_pre_post" />
 
     <label value="With opacity" id="multi_opacity_label" />
     <textbox type="number" min="0" max="100" preference="pref_multi_line_opacity" />
