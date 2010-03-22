@@ -35,14 +35,14 @@
     <label value="Punctuation pause (ms):" />
     <textbox type="number" min="0" max="250" preference="pref_punc_pause" />
 
-    <label value="Skip words" />
-    <textbox type="number" min="0" max="250" id="pref_skip_count" />
+    <label value="Skip over words" />
+    <textbox type="number" min="0" max="250" preference="pref_skip_count" />
 
     <label value="Skip forward action key:" />
-    <textbox preference="pref_fwd_key" />
+    <textbox preference="pref_fwd_key" maxlength="1"/>
 
     <label value="Skip back action key:" />
-    <textbox preference="pref_back_key" />
+    <textbox preference="pref_back_key" maxlength="1"/>
 
   </prefpane>
 
@@ -51,7 +51,7 @@
     <preferences>
       <preference id="pref_font" name="extensions.reasy.font_family" type="string"/>
       <preference id="pref_font_size" name="extensions.reasy.font_size" type="int"/>
-      <preference id="pref_font_size" name="extensions.reasy.auto_popup" type="bool"/>
+      <preference id="pref_auto_popup" name="extensions.reasy.auto_popup" type="bool"/>
       <preference id="pref_min_words" name="extensions.reasy.minWords" type="int"/>
       <preference id="pref_action_key" name="extensions.reasy.action_key" type="string"/>
       <preference id="pref_dim_background" name="extensions.reasy.dim_background" type="int"/>
@@ -62,21 +62,21 @@
       <caption label="Font" />
       <textbox preference="pref_font" />
       <label value="Size" />
-      <textbox type="number" min="6" id="pref_font_size" />
+      <textbox type="number" min="6" preference="pref_font_size" />
     </groupbox>
 
-    <checkbox id="auto_popup" label="display immediately" preference="auto_popup" />
+    <checkbox id="auto_popup" label="display immediately" preference="pref_auto_popup" />
     <label value="after selecting how many words:" />
     <textbox type="number" min="10" preference="pref_min_words" />
 
     <label value="or wait for action key:" />
-    <textbox preference="pref_action_key" />
+    <textbox preference="pref_action_key" maxlength="1"/>
 
     <label value="and dim original page by (%):" />
-    <textbox type="number" id="pref_dim_background" />
+    <textbox type="number" min="0" max="100" preference="pref_dim_background" />
 
     <label value="multi-line text spacing" />
-    <textbox type="number" min="0" max="100" id="pref_text_border" />
+    <textbox type="number" min="0" max="100" preference="pref_text_border" />
 
   </prefpane>
 
