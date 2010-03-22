@@ -11,9 +11,9 @@
                    em:homepageURL="http://sites.google.com/site/reasyreader/"
                    em:iconURL="chrome://reasy/content/reasy_logo.png"
                    em:optionsURL="chrome://reasy/content/options.xul">
-    <em:targetApplication RDF:resource="rdf:#$Z7+In1"/>
+    <em:targetApplication RDF:resource="rdf:#$Jju1B"/>
   </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$Z7+In1"
+  <RDF:Description RDF:about="rdf:#$Jju1B"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                    em:minVersion="1.5"
                    em:maxVersion="3.7a1pre" />
