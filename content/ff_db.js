@@ -13,6 +13,20 @@ com.reasy.ff_db = {
   }
 }
 
+if (!com.reasy.reasy_db) com.reasy.reasy_db = {};
+
+com.reasy.reasy_db = {
+
+    instance: null,
+
+    singleton: function() {
+        if (!com.reasy.reasy_db.instance) {
+            com.reasy.reasy_db.instance = new com.reasy.ff_db.DB();
+        }
+        return com.reasy.reasy_db.instance;
+    }
+}
+
 com.reasy.ff_db.DB.prototype.db = function() {
   if (null == this.prefs) {
     var compClass = Components.classes["@mozilla.org/preferences-service;1"];

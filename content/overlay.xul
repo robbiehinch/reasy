@@ -4,7 +4,6 @@
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
 	<script src="ff_db.js" />
-	<script src="reasy_db.js" />
 	<script src="reasy_reader.js" />
 	<script src="reasy.js" />
 

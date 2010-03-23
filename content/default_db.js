@@ -14,6 +14,20 @@ com.reasy.default_db = {
   }
 }
 
+if (!com.reasy.reasy_db) com.reasy.reasy_db = {};
+
+com.reasy.reasy_db = {
+
+    instance: null,
+
+    singleton: function() {
+        if (!com.reasy.reasy_db.instance) {
+            com.reasy.reasy_db.instance = new com.reasy.default_db.DB();
+        }
+        return com.reasy.reasy_db.instance;
+    }
+}
+
 com.reasy.default_db.DB.prototype.chg = function(key, val) {
   //does nothing
 }

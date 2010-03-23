@@ -9,7 +9,8 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "file://*/*"],
-      "js": ["default_db.js", "reasy_db.js", "reasy_reader.js", "reasy.js"]
+      "js": ["default_db.js", "reasy_reader.js", "reasy.js"],
+      "runat": "document_start"
     }
   ]
 }
