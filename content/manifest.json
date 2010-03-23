@@ -1,0 +1,16 @@
+
+{
+  "name": "Reasy",
+  "version": "0.0.1",
+  "description": "Reasy - Rapid Serial Visual Presentation (RSVP) Reader.",
+  "browser_action": {
+    "default_icon": "reasy_logo.png "
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+      "js": ["default_db.js", "reasy_db.js", "reasy_reader.js", "reasy.js"]
+    }
+  ]
+}
+

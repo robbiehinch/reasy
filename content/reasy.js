@@ -24,8 +24,15 @@ com.reasy.reasy = {
 
     if (!com.reasy.reasy.major_ver) {
       var ua = navigator.userAgent;
-      var ver_index = ua.indexOf("Firefox") + "Firefox".length + 1;
-      com.reasy.reasy.major_ver = parseInt(ua.substring(ver_index).split(' ')[0]);
+      if (ua) {
+        var ff_index = ua.indexOf("Firefox");
+        if (ff_index >= 0) {
+          var ver_index = ff_index + "Firefox".length + 1;
+          com.reasy.reasy.major_ver = parseInt(ua.substring(ver_index).split(' ')[0]);
+        }
+        else
+          com.reasy.reasy.major_ver = 0;
+      }
     }
 
     var gotText = doc.getSelection();
