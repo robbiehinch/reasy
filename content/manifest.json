@@ -6,12 +6,16 @@
   "browser_action": {
     "default_icon": "reasy_logo.png "
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*", "file://*/*"],
-      "js": ["default_db.js", "reasy_reader.js", "reasy.js"],
-      "runat": "document_start"
-    }
-  ]
+  "background_page": "background.html",
+  "permissions": [
+    "tabs", 
+    "http://*/*", 
+    "https://*/*"
+  ],
+  "browser_action": {
+    "default_title": "Reasy",
+    "default_icon": "reasy_logo.png",
+    "popup": "popup.html"
+  }
 }
 

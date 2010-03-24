@@ -1,0 +1,29 @@
+<html>
+
+<head>
+
+<title></title>
+
+<script type="text/javascript">
+
+function onPageInfo(o)
+{
+  document.getElementById("title").innerHTML = o.title;
+  document.getElementById("url").innerHTML = o.url;
+  document.getElementById("summary").innerHTML = o.summary; 
+} 
+
+// Call the getPageInfo function in the background page, passing in 
+// our onPageInfo function as the callback
+window.onload = function() {
+  var bg = chrome.extension.getBackgroundPage();
+  bg.getPageInfo(onPageInfo);
+}
+</script>
+</head> 
+<body>
+  <div id="title" />
+  <div id="url" />
+  <div id="summary" />
+</body> 
+</html>
