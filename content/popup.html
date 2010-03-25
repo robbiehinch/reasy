@@ -4,9 +4,16 @@
 
 <title></title>
 
-<style>
+<style type="text/css">
 body  {
-width:300px;height:300px;margin:0;padding:0;background-color:#cccccc;
+  width:500px;
+  height:200px;
+  margin:0;
+  padding:0;
+  background-color:#000066;
+  color:#FFFF99;
+  font-family:"Times New Roman";
+  font-size:20;
 }
 </style>
 
@@ -14,9 +21,7 @@ width:300px;height:300px;margin:0;padding:0;background-color:#cccccc;
 
 function onPageInfo(o)
 {
-  document.getElementById("title").innerHTML = o.title;
-  document.getElementById("url").innerHTML = o.url;
-  document.getElementById("summary").innerHTML = o.summary; 
+  document.getElementById("summary").innerHTML = o.selected_text; 
 } 
 
 // Call the getPageInfo function in the background page, passing in 
