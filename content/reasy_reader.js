@@ -113,6 +113,6 @@ com.reasy.reasy_reader.reader.prototype.run = function()
 		this.timeout_call = setTimeout(function(){self.run();}, time);
     }
     else
-      com.reasy.reasy_reader.close();
+      com.reasy.reasy.close();
   }
 }
