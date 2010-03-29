@@ -220,7 +220,7 @@ com.reasy.reasy = {
         sel.removeAllRanges();
     }
 
-    com.reasy.reasy.keyFn = com.reasy.reasy.reasySelect;
+    com.reasy.reasy.keyFn = com.reasy.reasy.select;
     com.reasy.reasy.fwdFn = null;
     com.reasy.reasy.backFn = null;
 
