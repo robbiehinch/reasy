@@ -5,7 +5,7 @@ if (!com.reasy.reasy_reader) com.reasy.reasy_reader = {};
 
 com.reasy.reasy_reader = {
 
-  reader: function(txt, reasyHtml, pre_post_mode, skip_count) {
+  reader: function(txt, reasyHtml, pre_post_mode, skip_count, close_fn) {
     this.txt = txt;
     this.reasyHtml = reasyHtml;
     this.position = 0;
@@ -14,6 +14,7 @@ com.reasy.reasy_reader = {
     this.set_node_text();
     this.pre_post_mode = pre_post_mode;
     this.skip_count = skip_count;
+    this.close_fn = close_fn;
   }
 }
 
@@ -113,6 +114,6 @@ com.reasy.reasy_reader.reader.prototype.run = function()
 		this.timeout_call = setTimeout(function(){self.run();}, time);
     }
     else
-      com.reasy.reasy.close();
+      this.close_fn();
   }
 }

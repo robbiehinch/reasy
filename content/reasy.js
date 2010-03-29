@@ -354,7 +354,7 @@ com.reasy.reasy = {
       reasyDiv[2] = doc.createTextNode(' ');
     }
 
-    var reasyReader = new com.reasy.reasy_reader.reader(reasySplit, reasyDiv, pre_post_mode, com.reasy.reasy_db.singleton().skip_count());
+    var reasyReader = new com.reasy.reasy_reader.reader(reasySplit, reasyDiv, pre_post_mode, com.reasy.reasy_db.singleton().skip_count(), com.reasy.reasy.close);
 
     var paddingDiv = doc.createElement('div');
     paddingDiv.style.height = '38%';
