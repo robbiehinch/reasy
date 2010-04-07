@@ -19,9 +19,131 @@ body  {
 
 <script type="text/javascript">
 
-function onPageInfo(o)
-{
-  document.getElementById("summary").innerHTML = o.selected_text; 
+if (!com) var com = {};
+if (!com.reasy) com.reasy = {};
+if (!com.reasy.reasy_reader) com.reasy.reasy_reader = {};
+
+com.reasy.reasy_reader = {
+
+  reader: function(txt, reasyHtml, pre_post_mode, skip_count, close_fn) {
+    this.txt = txt;
+    this.reasyHtml = reasyHtml;
+    this.position = 0;
+    this.last_punc_position = 0;
+    this.play = false;
+    this.set_node_text();
+    this.pre_post_mode = pre_post_mode;
+    this.skip_count = skip_count;
+    this.close_fn = close_fn;
+  }
+}
+
+com.reasy.reasy_reader.reader.prototype.playPause = function() {
+  this.play = !this.play;
+  this.run();
+}
+
+com.reasy.reasy_reader.reader.prototype.set_node_text = function() {
+  //the centre text
+  var fixation = 3; //com.reasy.reasy_db.singleton().fixation();
+  var textlen = this.txt.length;
+  var pos = this.position;
+  var txtArray = this.txt;
+  var text = txtArray[pos];
+
+  for (i = 1; i < fixation && i + pos < textlen; i++) {
+    text += ' ' + txtArray[pos + i];
+  }
+
+  if (!this.pre_post_mode)
+    this.reasyHtml[0].nodeValue = text;
+  else {
+    var htmlArray = this.reasyHtml;
+    htmlArray[1].nodeValue = text;
+
+    //pre text
+    text = ' ';
+    var pre_pos_start = pos - fixation;
+    for (i = 0; i < fixation; i++) {
+      var pre_pos = pre_pos_start + i;
+      if (pre_pos >= 0)
+        text += txtArray[pre_pos] + ' ';
+    }
+    htmlArray[0].nodeValue = text;
+
+    //post text
+    text = ' ';
+    var post_pos_start = pos + fixation;
+    for (i = 0; i < fixation && (post_pos_start + i + 1 < textlen); i++) {
+      var post_pos = post_pos_start + i;
+      text += txtArray[post_pos] + ' ';
+    }
+    htmlArray[2].nodeValue = text;
+  }
+
+  return /[\.,:;!\?]/.test(text);
+}
+
+com.reasy.reasy_reader.reader.prototype.fwd = function() {
+  this.position = Math.min(this.txt.length - 1, this.position + this.skip_count);
+  this.set_node_text();
+}
+
+com.reasy.reasy_reader.reader.prototype.back = function() {
+  this.position = Math.max(0, this.position - this.skip_count);
+  this.set_node_text();
+}
+
+com.reasy.reasy_reader.reader.prototype.run = function() {
+  if (this.play) {
+    var punctuation = this.set_node_text();
+    var fixation = 3; //com.reasy.reasy_db.singleton().fixation();
+    var ticker = true; //com.reasy.reasy_db.singleton().ticker_tape();
+    var textlen = this.txt.length;
+
+    if (ticker)
+      this.position += 1;
+    else
+      this.position += fixation;
+
+    var position = this.position;
+    if ((!ticker && position < (textlen + fixation))
+	|| (ticker && ((position + fixation) <= (textlen + 1)))) {
+      var time = 400 / 60; //com.reasy.reasy_db.singleton().read_interval();
+      if (!ticker)
+        time *= fixation;
+
+      if (punctuation && ((position - this.last_punc_position) > fixation)) {
+//        time += com.reasy.reasy_db.singleton().punc_pause();
+        this.last_punc_position = position;
+      }
+
+      var self = this;
+      this.timeout_call = setTimeout(function() { self.run(); }, time);
+    }
+    else
+      this.close_fn();
+  }
+}
+
+var reader = null;
+
+function onPageInfo(o) {
+    var div = document.getElementById("summary");
+    var text_split = o.selected_text.split(/[-\u2013\u2014\s]/gi);
+
+    var reasyDiv = new Array();
+    reasyDiv[0] = document.createTextNode(' ');
+//    var pre_post_mode = com.reasy.reasy_db.singleton().pre_post();
+//    if (pre_post_mode) {
+//      reasyDiv[1] = doc.createTextNode(' ');
+//      reasyDiv[2] = doc.createTextNode(' ');
+//    }
+
+    div.appendChild(reasyDiv[0]);
+    reader = new com.reasy.reasy_reader.reader(text_split, reasyDiv, false, 0, function() { });
+    reader.playPause();
+//  document.getElementById("summary").innerHTML = o.selected_text;
 } 
 
 // Call the getPageInfo function in the background page, passing in 
@@ -30,9 +152,11 @@ window.onload = function() {
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
 }
+
 </script>
 </head> 
 <body>
-  <div id="summary" />
+  <div id="summary">
+  </div>
 </body> 
 </html>
