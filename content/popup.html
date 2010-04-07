@@ -6,8 +6,10 @@
 
 <style type="text/css">
 body  {
-  width:80%;
-  height:33%;
+  width:300px;
+  height:100px;
+  vertical-align:middle;
+  
   margin:0;
   padding:0;
   background-color:#000066;
@@ -15,6 +17,13 @@ body  {
   font-family:"Times New Roman";
   font-size:20;
 }
+
+div  {
+  width:100%;
+  text-align:center;
+  top:33%;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -109,7 +118,7 @@ com.reasy.reasy_reader.reader.prototype.run = function() {
     var position = this.position;
     if ((!ticker && position < (textlen + fixation))
 	|| (ticker && ((position + fixation) <= (textlen + 1)))) {
-      var time = 400 / 60; //com.reasy.reasy_db.singleton().read_interval();
+      var time = 60000 / 300; //com.reasy.reasy_db.singleton().read_interval();
       if (!ticker)
         time *= fixation;
 
