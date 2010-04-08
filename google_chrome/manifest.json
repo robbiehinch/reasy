@@ -1,7 +1,7 @@
 
 {
   "name": "Reasy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Reasy - Rapid Serial Visual Presentation (RSVP) Reader.",
   "browser_action": {
     "default_icon": "reasy_logo.png "
