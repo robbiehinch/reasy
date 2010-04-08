@@ -17,6 +17,8 @@
     "default_title": "Reasy",
     "default_icon": "reasy_logo.png",
     "popup": "popup.html"
-  }
+  },
+  "icons": { "48": "icon48.png",
+          "128": "icon128.png" }
 }
 
