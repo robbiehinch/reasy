@@ -3,14 +3,10 @@
 
 <script type="text/javascript">
 
-  function update_wpm() {
-    var wpm = document.getElementById("wpm");
-    localStorage["wpm"] = wpm.value;
-  }
-
-  function update_fixation() {
-    var wpm = document.getElementById("fixation");
-    localStorage["fixation"] = wpm.value;
+  function update(input) {
+    var id = input.id;
+    var wpm = document.getElementById(id);
+    localStorage[id] = input.value;
   }
 
   function restore_options() {
@@ -24,9 +20,9 @@
 </head>
 <body onload="restore_options()">
 wpm
-<input id="wpm" onchange="update_wpm()"/>
+<input id="wpm" onchange="update(this)"/>
 <br />
 fixation
-<input id="fixation" onchange="update_fixation()"/>
+<input id="fixation" onchange="update(this)"/>
 </body>
 </html>
