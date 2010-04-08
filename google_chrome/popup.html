@@ -6,8 +6,8 @@
 
 <style type="text/css">
 body  {
-  width:300px;
-  height:100px;
+  width:500px;
+  height:200px;
   vertical-align:middle;
   
   margin:0;
@@ -33,10 +33,13 @@ div#padding  {
 <script type="text/javascript">
 
   function toBool(str) {
-    if ("false" == str)
-      return false;
-    else
-      return str;
+    if (str) {
+      if ("false" == str)
+        return false;
+      else
+        return str;
+    }
+    return false;
   }
   
 if (!com) var com = {};
@@ -133,10 +136,10 @@ com.reasy.reasy_reader.reader.prototype.run = function() {
       if (!ticker)
         time *= fixation;
 
-      if (punctuation && ((position - this.last_punc_position) > fixation)) {
+//      if (punctuation && ((position - this.last_punc_position) > fixation)) {
 //        time += com.reasy.reasy_db.singleton().punc_pause();
-        this.last_punc_position = position;
-      }
+//        this.last_punc_position = position;
+//      }
 
       var self = this;
       this.timeout_call = setTimeout(function() { self.run(); }, time);
@@ -168,6 +171,14 @@ function onPageInfo(o) {
 // Call the getPageInfo function in the background page, passing in 
 // our onPageInfo function as the callback
 window.onload = function() {
+var fixation = localStorage["fixation"];
+if (!fixation)
+  localStorage["fixation"] = 2;
+var wpm = localStorage["wpm"];
+if (!wpm)
+  localStorage["wpm"] = 300;
+
+  //get background poage to listen
   var bg = chrome.extension.getBackgroundPage();
   bg.getPageInfo(onPageInfo);
 }
