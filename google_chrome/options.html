@@ -2,7 +2,14 @@
 <head>
 
 <script type="text/javascript">
-
+ 
+  function toBool(str) {
+    if ("false" == str)
+      return false;
+    else
+      return str;
+  }
+ 
   function update(input) {
     var id = input.id;
     var wpm = document.getElementById(id);
@@ -14,15 +21,21 @@
     wpm.value = localStorage["wpm"];
     var fixation = document.getElementById("fixation");
     fixation.value = localStorage["fixation"];
+    var ticker = document.getElementById("ticker");
+    ticker.checked = toBool(localStorage["ticker"]);
   }
   
 </script>
+
 </head>
 <body onload="restore_options()">
-wpm
-<input id="wpm" onchange="update(this)"/>
-<br />
-fixation
-<input id="fixation" onchange="update(this)"/>
+  wpm
+  <input id="wpm" onchange="update(this)"/>
+  <br />
+  fixation
+  <input id="fixation" onchange="update(this)"/>
+  <br />
+  ticker tape
+  <input type="checkbox" id="ticker" onchange="update(this)"/>
 </body>
 </html>

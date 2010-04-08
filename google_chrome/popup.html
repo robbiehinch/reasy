@@ -32,6 +32,13 @@ div#padding  {
 
 <script type="text/javascript">
 
+  function toBool(str) {
+    if ("false" == str)
+      return false;
+    else
+      return str;
+  }
+  
 if (!com) var com = {};
 if (!com.reasy) com.reasy = {};
 if (!com.reasy.reasy_reader) com.reasy.reasy_reader = {};
@@ -58,7 +65,7 @@ com.reasy.reasy_reader.reader.prototype.playPause = function() {
 
 com.reasy.reasy_reader.reader.prototype.set_node_text = function() {
   //the centre text
-  var fixation = 3; //com.reasy.reasy_db.singleton().fixation();
+  var fixation = localStorage["fixation"]; //com.reasy.reasy_db.singleton().fixation();
   var textlen = this.txt.length;
   var pos = this.position;
   var txtArray = this.txt;
@@ -111,7 +118,7 @@ com.reasy.reasy_reader.reader.prototype.run = function() {
   if (this.play) {
     var punctuation = this.set_node_text();
     var fixation = localStorage["fixation"]; //com.reasy.reasy_db.singleton().fixation();
-    var ticker = true; //com.reasy.reasy_db.singleton().ticker_tape();
+    var ticker = toBool(localStorage["ticker"]); //com.reasy.reasy_db.singleton().ticker_tape();
     var textlen = this.txt.length;
 
     if (ticker)
