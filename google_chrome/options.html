@@ -1,6 +1,32 @@
 <html>
 <head>
+
+<script type="text/javascript">
+
+  function update_wpm() {
+    var wpm = document.getElementById("wpm");
+    localStorage["wpm"] = wpm.value;
+  }
+
+  function update_fixation() {
+    var wpm = document.getElementById("fixation");
+    localStorage["fixation"] = wpm.value;
+  }
+
+  function restore_options() {
+    var wpm = document.getElementById("wpm");
+    wpm.value = localStorage["wpm"];
+    var fixation = document.getElementById("fixation");
+    fixation.value = localStorage["fixation"];
+  }
+  
+</script>
 </head>
-<body>
+<body onload="restore_options()">
+wpm
+<input id="wpm" onchange="update_wpm()"/>
+<br />
+fixation
+<input id="fixation" onchange="update_fixation()"/>
 </body>
 </html>

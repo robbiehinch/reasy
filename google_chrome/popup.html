@@ -110,7 +110,7 @@ com.reasy.reasy_reader.reader.prototype.back = function() {
 com.reasy.reasy_reader.reader.prototype.run = function() {
   if (this.play) {
     var punctuation = this.set_node_text();
-    var fixation = 3; //com.reasy.reasy_db.singleton().fixation();
+    var fixation = localStorage["fixation"]; //com.reasy.reasy_db.singleton().fixation();
     var ticker = true; //com.reasy.reasy_db.singleton().ticker_tape();
     var textlen = this.txt.length;
 
@@ -122,7 +122,7 @@ com.reasy.reasy_reader.reader.prototype.run = function() {
     var position = this.position;
     if ((!ticker && position < (textlen + fixation))
 	|| (ticker && ((position + fixation) <= (textlen + 1)))) {
-      var time = 60000 / 300; //com.reasy.reasy_db.singleton().read_interval();
+      var time = 60000 / localStorage["wpm"]; //com.reasy.reasy_db.singleton().read_interval();
       if (!ticker)
         time *= fixation;
 
