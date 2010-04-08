@@ -24,15 +24,15 @@
     var wpmval = localStorage["wpm"];
     
     if (wpmval)
-      wpm.value = wpmval;
+      wpm.value = parseInt(wpmval);
     else
       wpm.value = 300;
       
     var fixation = document.getElementById("fixation");
     var fixationval = localStorage["fixation"];
 
-    if (wpmval)
-      fixation.value = wpmval;
+    if (fixationval)
+      fixation.value = parseInt(fixationval);
     else
       fixation.value = 2;
 
