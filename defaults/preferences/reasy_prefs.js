@@ -24,3 +24,4 @@ pref("extensions.reasy.skip_count", 5);
 pref("extensions.reasy.fwd_key", 'F');
 pref("extensions.reasy.back_key", 'B');
 pref("extensions.reasy.text_border", 0);
+pref("extensions.reasy.z_index", 9);

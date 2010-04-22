@@ -288,5 +288,9 @@ com.reasy.ff_db.DB.prototype.get_text_border = function() {
 }
 
 com.reasy.ff_db.DB.prototype.set_text_border = function(val) {
-  return this.db().setIntPref('text_border', val);
+    return this.db().setIntPref('text_border', val);
+}
+
+com.reasy.ff_db.DB.prototype.zIndex = function(val) {
+    return this.db().getIntPref('z_index', val);
 }

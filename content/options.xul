@@ -56,6 +56,7 @@
       <preference id="pref_action_key" name="extensions.reasy.action_key" type="string"/>
       <preference id="pref_dim_background" name="extensions.reasy.dim_background" type="int"/>
       <preference id="pref_text_border" name="extensions.reasy.text_border" type="int"/>
+      <preference id="pref_z_index" name="extensions.reasy.z_index" type="int"/>
     </preferences>
 
     <groupbox>
@@ -77,6 +78,9 @@
 
     <label value="multi-line text spacing" />
     <textbox type="number" min="0" max="100" preference="pref_text_border" />
+
+    <label value="z-index" />
+    <textbox type="number" min="9" max="9999" preference="pref_z_index" />
 
   </prefpane>
 
