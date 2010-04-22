@@ -19,25 +19,28 @@
     localStorage[id] = input.value;
   }
 
+  function restore_int_setting(id, deflt) {
+    var element = document.getElementById(id);
+    var elementval = localStorage[id];
+    if (elementval)
+      element.value = parseInt(elementval);
+    else
+      element.value = deflt;
+  }
+
+  function restore_bool_setting(id) {
+    var elem = document.getElementById(id);
+    elem.checked = toBool(localStorage[id]);
+  }
+  
+
   function restore_options() {
-    var wpm = document.getElementById("wpm");
-    var wpmval = localStorage["wpm"];
-    
-    if (wpmval)
-      wpm.value = parseInt(wpmval);
-    else
-      wpm.value = 300;
-      
-    var fixation = document.getElementById("fixation");
-    var fixationval = localStorage["fixation"];
-
-    if (fixationval)
-      fixation.value = parseInt(fixationval);
-    else
-      fixation.value = 2;
-
-    var ticker = document.getElementById("ticker");
-    ticker.checked = toBool(localStorage["ticker"]);
+    restore_int_setting("wpm", 300);
+    restore_int_setting("fixation", 2);
+    restore_int_setting("font_size", 20);
+    restore_int_setting("punc_pause_length", 0);
+    restore_bool_setting("ticker");
+    restore_bool_setting("punc_pause");
   }
   
 </script>
@@ -45,12 +48,19 @@
 </head>
 <body onload="restore_options()">
   Words per minute
-  <input id="wpm" onchange="update(this)"/>
+  <input id="wpm" onchange="update(this)" />
   <br />
   fixation (number of words displayed at a time)
-  <input id="fixation" onchange="update(this)"/>
+  <input id="fixation" onchange="update(this)" />
+  <br />
+  font size
+  <input id="font_size" onchange="update(this)" />
   <br />
   ticker tape (scroll text)
-  <input type="checkbox" id="ticker" onchange="update(this)"/>
+  <input type="checkbox" id="ticker" onchange="update(this)" />
+  <br />
+  punctuation pause
+  <input type="checkbox" id="punc_pause" onchange="update(this)" />
+  <input id="punc_pause_length" onchange="update(this)" />
 </body>
 </html>

@@ -50,6 +50,7 @@ com.reasy.reasy_reader = {
 
   reader: function(txt, reasyHtml, pre_post_mode, skip_count, close_fn) {
     this.txt = txt;
+//    reasyHtml.parentNode.style.fontSize = parseInt(localStorage["font_size"]) + "px";
     this.reasyHtml = reasyHtml;
     this.position = 0;
     this.last_punc_position = 0;
@@ -117,6 +118,14 @@ com.reasy.reasy_reader.reader.prototype.back = function() {
   this.set_node_text();
 }
 
+com.reasy.reasy_reader.punctuation_pause = function() {
+  if (toBool(localStorage["punc_pause"])) {
+    return parseInt(localStorage["punc_pause_length"]);
+  }
+
+  return 0;
+}
+
 com.reasy.reasy_reader.reader.prototype.run = function() {
   if (this.play) {
     var punctuation = this.set_node_text();
@@ -131,15 +140,15 @@ com.reasy.reasy_reader.reader.prototype.run = function() {
 
     var position = this.position;
     if ((!ticker && position < (textlen + fixation))
-	|| (ticker && ((position + fixation) <= (textlen + 1)))) {
+    || (ticker && ((position + fixation) <= (textlen + 1)))) {
       var time = 60000 / parseFloat(localStorage["wpm"]); //com.reasy.reasy_db.singleton().read_interval();
       if (!ticker)
         time *= fixation;
 
-//      if (punctuation && ((position - this.last_punc_position) > fixation)) {
-//        time += com.reasy.reasy_db.singleton().punc_pause();
-//        this.last_punc_position = position;
-//      }
+      if (punctuation && ((position - this.last_punc_position) > fixation)) {
+        time += com.reasy.reasy_reader.punctuation_pause();
+        this.last_punc_position = position;
+      }
 
       var self = this;
       this.timeout_call = setTimeout(function() { self.run(); }, time);
