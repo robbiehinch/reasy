@@ -50,7 +50,6 @@ com.reasy.reasy_reader = {
 
   reader: function(txt, reasyHtml, pre_post_mode, skip_count, close_fn) {
     this.txt = txt;
-//    reasyHtml.parentNode.style.fontSize = parseInt(localStorage["font_size"]) + "px";
     this.reasyHtml = reasyHtml;
     this.position = 0;
     this.last_punc_position = 0;
@@ -162,6 +161,7 @@ var reader = null;
 
 function onPageInfo(o) {
     var div = document.getElementById("summary");
+    div.style.fontSize = parseInt(localStorage["font_size"]) + "px";
     var text_split = o.selected_text.split(/[-\u2013\u2014\s]/gi);
 
     var reasyDiv = new Array();
