@@ -1,5 +1,23 @@
-<html>
-<head>
+<html title="Reasy settings">
+<head title="Reasy settings">
+
+<style type="text/css">
+div  {
+  width:60%;
+  top:20%;
+  left:20%;
+  background-color:#ffffee;
+  position:relative;
+  padding:20px;
+  border-style:solid;
+}
+
+body
+{
+  font-family:Tahoma;
+  background-color:#ffffcc;
+}
+</style>
 
 <script type="text/javascript">
 
@@ -32,7 +50,6 @@
     var elem = document.getElementById(id);
     elem.checked = toBool(localStorage[id]);
   }
-  
 
   function restore_options() {
     restore_int_setting("wpm", 300);
@@ -46,21 +63,27 @@
 </script>
 
 </head>
-<body onload="restore_options()">
+<body onload="restore_options()" title="Reasy settings">
+<div align="right">
+  <b><u>Reasy Settings</u></b>
+  <br />
+  <br />
   Words per minute
   <input id="wpm" onchange="update(this)" />
   <br />
-  fixation (number of words displayed at a time)
+  Fixation (number of words displayed at a time)
   <input id="fixation" onchange="update(this)" />
   <br />
-  font size
+  Font size
   <input id="font_size" onchange="update(this)" />
   <br />
-  ticker tape (scroll text)
+  <input type="checkbox" id="punc_pause" onchange="update(this)" />
+  Punctuation pause
+  <input id="punc_pause_length" onchange="update(this)" />
+  <br />
+  Ticker tape (horizontally scroll text)
   <input type="checkbox" id="ticker" onchange="update(this)" />
   <br />
-  punctuation pause
-  <input type="checkbox" id="punc_pause" onchange="update(this)" />
-  <input id="punc_pause_length" onchange="update(this)" />
+</div>
 </body>
 </html>
