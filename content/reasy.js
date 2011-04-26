@@ -79,8 +79,9 @@ com.reasy.reasy = {
         var nleft = (parseInt(div.style.left) + evt.clientX - old_x);
         div.style.top = ntop + 'px';
         div.style.left = nleft + 'px';
-        com.reasy.reasy_db.singleton().setTop(ntop);
-        com.reasy.reasy_db.singleton().setLeft(nleft);
+        var db = com.reasy.reasy_db.singleton();
+        db.setTop(ntop);
+        db.setLeft(nleft);
     },
 
     sizeLeft: function(evt, div, old_x, old_y) {
@@ -89,8 +90,9 @@ com.reasy.reasy = {
         var nwidth = parseInt(div.style.width) - diff;
         div.style.left = nleft + 'px';
         div.style.width = nwidth + 'px';
-        com.reasy.reasy_db.singleton().setLeft(nleft);
-        com.reasy.reasy_db.singleton().setWidth(nwidth);
+        var db = com.reasy.reasy_db.singleton();
+        db.setLeft(nleft);
+        db.setWidth(nwidth);
     },
 
     sizeRight: function(evt, div, old_x, old_y) {
@@ -106,8 +108,9 @@ com.reasy.reasy = {
         var nheight = parseInt(div.style.height) - diff;
         div.style.top = ntop + 'px';
         div.style.height = nheight + 'px';
-        com.reasy.reasy_db.singleton().setTop(ntop);
-        com.reasy.reasy_db.singleton().setHeight(nheight);
+        var db = com.reasy.reasy_db.singleton();
+        db.setTop(ntop);
+        db.setHeight(nheight);
     },
 
     sizeBottom: function(evt, div, old_x, old_y) {
@@ -174,23 +177,27 @@ com.reasy.reasy = {
     },
 
     incWPM: function(reasyWPMText) {
-        com.reasy.reasy_db.singleton().incWpm();
-        reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().wpm();
+      var db = com.reasy.reasy_db.singleton();
+      db.incWpm();
+      reasyWPMText.nodeValue = db.wpm();
     },
 
     decWPM: function(reasyWPMText) {
-        com.reasy.reasy_db.singleton().decWpm();
-        reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().wpm();
+      var db = com.reasy.reasy_db.singleton();
+      db.decWpm();
+      reasyWPMText.nodeValue = db.wpm();
     },
 
     incFixation: function(reasyFixationText) {
-        com.reasy.reasy_db.singleton().incFix();
-        reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().fixation();
+      var db = com.reasy.reasy_db.singleton();
+      db.incFix();
+      reasyFixationText.nodeValue = db.fixation();
     },
 
     decFixation: function(reasyFixationText) {
-        com.reasy.reasy_db.singleton().decFix();
-        reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().fixation();
+      var db = com.reasy.reasy_db.singleton();
+      db.decFix();
+      reasyFixationText.nodeValue = db.fixation();
     },
 
     mouseUp: function(evt, div) {
@@ -207,11 +214,11 @@ com.reasy.reasy = {
     close: function(evt, div) {
         var reasyDiv = content.document.getElementById(com.reasy.reasy.houseDivName);
         if (reasyDiv)
-            content.document.body.removeChild(reasyDiv);
+          content.document.body.removeChild(reasyDiv);
 
         var bg = content.document.getElementById(com.reasy.reasy.opaqueBGName);
         if (bg)
-            content.document.body.removeChild(bg);
+          content.document.body.removeChild(bg);
 
         if (div || com.reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
         {
@@ -238,25 +245,26 @@ com.reasy.reasy = {
         reasyHouseDiv.setAttribute('id', com.reasy.reasy.houseDivName);
         reasyHouseDiv.style.position = 'fixed';
 
-        var db_top = com.reasy.reasy_db.singleton().top();
+        var db = com.reasy.reasy_db.singleton();
+        var db_top = db.top();
         if (db_top < -100)
             db_top = doc.height / 5;
         reasyHouseDiv.style.top = db_top + 'px';
-        var db_left = com.reasy.reasy_db.singleton().left();
+        var db_left = db.left();
         if (db_left < -100)
             db_left = doc.width / 5;
         reasyHouseDiv.style.left = db_left + 'px';
-        var db_height = com.reasy.reasy_db.singleton().height();
+        var db_height = db.height();
         if (db_height <= 0)
             db_height = db_top * 3;
         reasyHouseDiv.style.height = db_height + 'px';
-        var db_width = com.reasy.reasy_db.singleton().width();
+        var db_width = db.width();
         if (db_width <= 0)
             db_width = db_left * 3;
         reasyHouseDiv.style.width = db_width + 'px';
-        reasyHouseDiv.style.zIndex = com.reasy.reasy_db.singleton().zIndex() + 1;
-        com.reasy.reasy_db.singleton().bkgColor(reasyHouseDiv);
-        com.reasy.reasy_db.singleton().txtColor(reasyHouseDiv);
+        reasyHouseDiv.style.zIndex = db.zIndex() + 1;
+        db.bkgColor(reasyHouseDiv);
+        db.txtColor(reasyHouseDiv);
 
         var menuDiv = doc.createElement('div');
         menuDiv.style.fontSize = '16px';
@@ -265,7 +273,7 @@ com.reasy.reasy = {
         menuDiv.style.padding = '10px';
         reasyHouseDiv.appendChild(menuDiv);
 
-        var background_opacity = com.reasy.reasy_db.singleton().dim_background();
+        var background_opacity = db.dim_background();
         if (0 == background_opacity) {
             // create menu/close button div
             var closeButton = doc.createElement('button');
@@ -289,22 +297,22 @@ com.reasy.reasy = {
             opaque_bg.style.top = '0px';
             opaque_bg.style.left = '0px';
             opaque_bg.style.opacity = parseFloat(background_opacity) / 100.0;
-            opaque_bg.style.zIndex = com.reasy.reasy_db.singleton().zIndex();
-            com.reasy.reasy_db.singleton().bkgColor(opaque_bg);
+            opaque_bg.style.zIndex = db.zIndex();
+            db.bkgColor(opaque_bg);
             opaque_bg.setAttribute('id', com.reasy.reasy.opaqueBGName);
             com.reasy.reasy.setOrReplaceNode(com.reasy.reasy.opaqueBGName, opaque_bg);
         }
 
         // make settings text div
         var settingsDiv = doc.createElement('div');
-        com.reasy.reasy_db.singleton().txtColor(settingsDiv);
+        db.txtColor(settingsDiv);
         settingsDiv.style.fontSize = '16px';
         settingsDiv.style.fontWeight = 'bold';
         settingsDiv.style.fontFamily = 'Tahoma';
 
         //wpm
         var wpmDiv = doc.createElement('div');
-        var reasyWPMText = doc.createTextNode(com.reasy.reasy_db.singleton().wpm());
+        var reasyWPMText = doc.createTextNode(db.wpm());
         {
             var incWpmDiv = doc.createElement('div');
             incWpmDiv.onmousedown = function() { com.reasy.reasy.incWPM(reasyWPMText); }
@@ -323,7 +331,7 @@ com.reasy.reasy = {
         wpmDiv.appendChild(decWpmDiv);
         settingsDiv.appendChild(wpmDiv)
         //fixation
-        var reasyFixationText = doc.createTextNode(com.reasy.reasy_db.singleton().fixation());
+        var reasyFixationText = doc.createTextNode(db.fixation());
         var fixationDiv = doc.createElement('div');
 
         var incFixationDiv = doc.createElement('div');
@@ -348,40 +356,40 @@ com.reasy.reasy = {
         // make reasy text div
         var reasyDiv = new Array();
         reasyDiv[0] = doc.createTextNode(' ');
-        var pre_post_mode = com.reasy.reasy_db.singleton().pre_post();
+        var pre_post_mode = db.pre_post();
         if (pre_post_mode) {
             reasyDiv[1] = doc.createTextNode(' ');
             reasyDiv[2] = doc.createTextNode(' ');
         }
 
-        var reasyReader = new com.reasy.reasy_reader.reader(reasySplit, reasyDiv, pre_post_mode, com.reasy.reasy_db.singleton().skip_count(), com.reasy.reasy.close);
+        var reasyReader = new com.reasy.reasy_reader.reader(reasySplit, reasyDiv, pre_post_mode, db.skip_count(), com.reasy.reasy.close);
 
         var paddingDiv = doc.createElement('div');
         paddingDiv.style.height = '38%';
         reasyHouseDiv.appendChild(paddingDiv);
 
-        var bwidth = com.reasy.reasy_db.singleton().get_text_border();
+        var bwidth = db.get_text_border();
         for (i = 0; i < reasyDiv.length; i++) {
             var textDiv = doc.createElement('div');
-            com.reasy.reasy_db.singleton().txtColor(textDiv);
+            db.txtColor(textDiv);
             textDiv.style.clear = 'both';
             textDiv.style.cssFloat = 'left';
             textDiv.style.width = '100%';
-            textDiv.style.fontSize = com.reasy.reasy_db.singleton().fontSize();
-            textDiv.style.fontFamily = com.reasy.reasy_db.singleton().fontFamily();
+            textDiv.style.fontSize = db.fontSize();
+            textDiv.style.fontFamily = db.fontFamily();
             if (!pre_post_mode)
                 textDiv.style.textAlign = 'center';
             else {
                 textDiv.style.textAlign = 'left';
                 textDiv.style.position = 'relative';
-                if (com.reasy.reasy_db.singleton().live_ink())
+                if (db.live_ink())
                     textDiv.style.left = db_left + 50 * (i - 1) + 'px';
                 else
                     textDiv.style.left = db_left - 50 + 'px';
 
                 if (0 == i % 2)	// set opacity of leading and trailing lines
                 {
-                    var opacity = com.reasy.reasy_db.singleton().multi_line_opacity();
+                  var opacity = db.multi_line_opacity();
                     if (opacity > 0)
                         textDiv.style.opacity = parseFloat() / 100.0;
                 }
@@ -402,8 +410,8 @@ com.reasy.reasy = {
         com.reasy.reasy.keyFn = function() { reasyReader.playPause(); };
         com.reasy.reasy.fwdFn = function() { reasyReader.fwd(); };
         com.reasy.reasy.backFn = function() { reasyReader.back(); };
-        if (com.reasy.reasy_db.singleton().auto_play())
-            reasyReader.playPause(); ;
+        if (db.auto_play())
+            reasyReader.playPause();
     },
 
     select: function() {
@@ -420,13 +428,14 @@ com.reasy.reasy = {
         }
     },
 
-    keyDown: function(evt) {
-        if (com.reasy.reasy_db.singleton().action_key().charCodeAt(0) == evt.which)
-            com.reasy.reasy.keyFn();
-        else if ((com.reasy.reasy_db.singleton().fwd_key().charCodeAt(0) == evt.which) && com.reasy.reasy.fwdFn)
-            com.reasy.reasy.fwdFn();
-        else if ((com.reasy.reasy_db.singleton().back_key().charCodeAt(0) == evt.which) && com.reasy.reasy.backFn)
-            com.reasy.reasy.backFn();
+    keyDown: function (evt) {
+      var db = com.reasy.reasy_db.singleton();
+      if (db.action_key().charCodeAt(0) == evt.which)
+        com.reasy.reasy.keyFn();
+      else if ((db.fwd_key().charCodeAt(0) == evt.which) && com.reasy.reasy.fwdFn)
+        com.reasy.reasy.fwdFn();
+      else if ((db.back_key().charCodeAt(0) == evt.which) && com.reasy.reasy.backFn)
+        com.reasy.reasy.backFn();
     },
 
     windowFocus: function(evt) {
