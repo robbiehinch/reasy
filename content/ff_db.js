@@ -104,13 +104,14 @@ com.reasy.ff_db.DB.prototype.wpmChg = function() {
   return this.db().getIntPref('wpmChg');
 }
 
-com.reasy.ff_db.DB.prototype.incWpm = function(div) {
+com.reasy.ff_db.DB.prototype.incWpm = function (div) {
   this.inc('wpm', this.wpm(), this.wpmChg());
   var w = this.wpm();
   if (div) {
     div.nodeValue = w;
   }
   this.readInterval = 60000 / w;
+  return w;
 }
 
 com.reasy.ff_db.DB.prototype.decWpm = function(div) {
@@ -120,24 +121,29 @@ com.reasy.ff_db.DB.prototype.decWpm = function(div) {
     div.nodeValue = w;
   }
   this.readInterval = 60000 / w;
+  return w;
 }
 
 com.reasy.ff_db.DB.prototype.fixation = function() {
   return this.db().getIntPref('fixation');
 }
 
-com.reasy.ff_db.DB.prototype.incFix = function(div) {
+com.reasy.ff_db.DB.prototype.incFix = function (div) {
   this.inc('fixation', this.fixation(), 1);
+  var newFixation = this.fixation();
   if (div) {
-    div.nodeValue = this.fixation();
+    div.nodeValue = newFixation;
   }
+  return newFixation;
 }
 
 com.reasy.ff_db.DB.prototype.decFix = function(div) {
   this.dec('fixation', this.fixation(), 1);
+  var newFixation = this.fixation();
   if (div) {
-    div.nodeValue = this.fixation();
+    div.nodeValue = newFixation;
   }
+  return newFixation;
 }
 
 com.reasy.ff_db.DB.prototype.punc_pause = function() {

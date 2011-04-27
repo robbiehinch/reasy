@@ -177,27 +177,19 @@ com.reasy.reasy = {
     },
 
     incWPM: function(reasyWPMText) {
-      var db = com.reasy.reasy_db.singleton();
-      db.incWpm();
-      reasyWPMText.nodeValue = db.wpm();
+      reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().incWpm();
     },
 
     decWPM: function(reasyWPMText) {
-      var db = com.reasy.reasy_db.singleton();
-      db.decWpm();
-      reasyWPMText.nodeValue = db.wpm();
+      reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().decWpm();
     },
 
     incFixation: function(reasyFixationText) {
-      var db = com.reasy.reasy_db.singleton();
-      db.incFix();
-      reasyFixationText.nodeValue = db.fixation();
+      reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().incFix();
     },
 
     decFixation: function(reasyFixationText) {
-      var db = com.reasy.reasy_db.singleton();
-      db.decFix();
-      reasyFixationText.nodeValue = db.fixation();
+      reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().decFix();
     },
 
     mouseUp: function(evt, div) {
