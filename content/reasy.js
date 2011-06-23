@@ -18,7 +18,7 @@ com.reasy.reasy = {
         this.y = y;
     },
 
-    getContentSelectedText: function(doc) {
+    getContentSelectedText: function (doc) {
         if (!doc)
             return "";
 
@@ -42,7 +42,7 @@ com.reasy.reasy = {
         return gotText;
     },
 
-    getIFrameSelection: function(doc) {
+    getIFrameSelection: function (doc) {
         var ret = com.reasy.reasy.getContentSelectedText(doc);
         for (var f in window.frames) {
             if (f.contentWindow) {
@@ -61,7 +61,7 @@ com.reasy.reasy = {
         return ret;
     },
 
-    setOrReplaceNode: function(nodeName, node) {
+    setOrReplaceNode: function (nodeName, node) {
         // replace the old div or add the div to the document
         var oldNode = content.document.getElementById(nodeName);
         if (oldNode) {
@@ -74,7 +74,7 @@ com.reasy.reasy = {
             content.document.body.appendChild(node);
     },
 
-    moveFunction: function(evt, div, old_x, old_y) {
+    moveFunction: function (evt, div, old_x, old_y) {
         var ntop = (parseInt(div.style.top) + evt.clientY - old_y);
         var nleft = (parseInt(div.style.left) + evt.clientX - old_x);
         div.style.top = ntop + 'px';
@@ -84,7 +84,7 @@ com.reasy.reasy = {
         db.setLeft(nleft);
     },
 
-    sizeLeft: function(evt, div, old_x, old_y) {
+    sizeLeft: function (evt, div, old_x, old_y) {
         var diff = evt.clientX - old_x;
         var nleft = parseInt(div.style.left) + diff;
         var nwidth = parseInt(div.style.width) - diff;
@@ -95,14 +95,14 @@ com.reasy.reasy = {
         db.setWidth(nwidth);
     },
 
-    sizeRight: function(evt, div, old_x, old_y) {
+    sizeRight: function (evt, div, old_x, old_y) {
         var diff = evt.clientX - old_x;
         var nwidth = parseInt(div.style.width) + diff;
         div.style.width = nwidth + 'px';
         com.reasy.reasy_db.singleton().setWidth(nwidth);
     },
 
-    sizeTop: function(evt, div, old_x, old_y) {
+    sizeTop: function (evt, div, old_x, old_y) {
         var diff = evt.clientY - old_y;
         var ntop = parseInt(div.style.top) + diff;
         var nheight = parseInt(div.style.height) - diff;
@@ -113,14 +113,14 @@ com.reasy.reasy = {
         db.setHeight(nheight);
     },
 
-    sizeBottom: function(evt, div, old_x, old_y) {
+    sizeBottom: function (evt, div, old_x, old_y) {
         var diff = evt.clientY - old_y;
         var nheight = parseInt(div.style.height) + diff;
         div.style.height = nheight + 'px';
         com.reasy.reasy_db.singleton().setHeight(nheight);
     },
 
-    mouseMove: function(evt, myXY, div, move_fn) {
+    mouseMove: function (evt, myXY, div, move_fn) {
         var nx = evt.clientX;
         var ny = evt.clientY;
         if (myXY.diff_coords(nx, ny)) {
@@ -130,9 +130,10 @@ com.reasy.reasy = {
         }
     },
 
-    houseClicked: function(evt, div) {
+    houseClicked: function (evt) {
         var x = evt.clientX;
         var y = evt.clientY;
+        var div = evt.target;
         var x_diff = x - parseInt(div.style.left);
         var y_diff = y - parseInt(div.style.top);
         var fn = com.reasy.reasy.moveFunction;
@@ -148,19 +149,27 @@ com.reasy.reasy = {
         if (fn == com.reasy.reasy.moveFunction)
             div.style.cursor = 'move';
         myXY = new com.reasy.reasy.XY(x, y);
-        div.onmousemove = function(newevt) { com.reasy.reasy.mouseMove(newevt, myXY, div, fn); };
+        var mv_fn = function (newevt) { com.reasy.reasy.mouseMove(newevt, myXY, div, fn); };
 
-        content.document.addEventListener("mousemove"
-		    , div.onmousemove
-		    , false);
-        content.document.addEventListener("mouseup"
-		    , div.onmouseup
-		    , false);
+        var remove_fn = function () {
+            div.style.cursor = 'default';
+            div.removeEventListener("mousemove", mv_fn, false);
+            content.document.removeEventListener("mousemove", mv_fn, false);
+            div.removeEventListener("mouseup", this, false);
+            content.document.removeEventListener("mouseup", this, false);
+        }
+
+        div.addEventListener("mousemove", mv_fn, false);
+        content.document.addEventListener("mousemove", mv_fn, false);
+
+        div.addEventListener("mouseup", remove_fn, false);
+        content.document.addEventListener("mouseup", remove_fn, false);
     },
 
-    mouseOver: function(evt, div) {
+    mouseOver: function (evt, div) {
         var x = evt.clientX;
         var y = evt.clientY;
+        var div = evt.target;
         var x_diff = x - parseInt(div.style.left);
         var y_diff = y - parseInt(div.style.top);
         if (x_diff < 10 || x_diff >= (parseInt(div.style.width) - 10)) {
@@ -176,41 +185,30 @@ com.reasy.reasy = {
         }
     },
 
-    incWPM: function(reasyWPMText) {
-      reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().incWpm();
+    incWPM: function (reasyWPMText) {
+        reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().incWpm();
     },
 
-    decWPM: function(reasyWPMText) {
-      reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().decWpm();
+    decWPM: function (reasyWPMText) {
+        reasyWPMText.nodeValue = com.reasy.reasy_db.singleton().decWpm();
     },
 
-    incFixation: function(reasyFixationText) {
-      reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().incFix();
+    incFixation: function (reasyFixationText) {
+        reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().incFix();
     },
 
-    decFixation: function(reasyFixationText) {
-      reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().decFix();
+    decFixation: function (reasyFixationText) {
+        reasyFixationText.nodeValue = com.reasy.reasy_db.singleton().decFix();
     },
 
-    mouseUp: function(evt, div) {
-        div.style.cursor = 'default';
-        content.document.removeEventListener("mousemove"
-		    , div.onmousemove
-		    , false);
-        content.document.removeEventListener("mouseup"
-		    , div.onmouseup
-		    , false);
-        div.onmousemove = null;
-    },
-
-    close: function(evt, div) {
+    close: function (evt, div) {
         var reasyDiv = content.document.getElementById(com.reasy.reasy.houseDivName);
         if (reasyDiv)
-          content.document.body.removeChild(reasyDiv);
+            content.document.body.removeChild(reasyDiv);
 
         var bg = content.document.getElementById(com.reasy.reasy.opaqueBGName);
         if (bg)
-          content.document.body.removeChild(bg);
+            content.document.body.removeChild(bg);
 
         if (div || com.reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
         {
@@ -224,14 +222,14 @@ com.reasy.reasy = {
         com.reasy.reasy.backFn = null;
 
         if (div)
-            com.reasy.reasy.mouseUp(evt, div);
+            com.reasy.reasy.onmouseup();
     },
 
     keyFn: null,
     fwdFn: null,
     backFn: null,
 
-    createDom: function(doc, reasySplit) {
+    createDom: function (doc, reasySplit) {
         //make reasy housing div
         var reasyHouseDiv = doc.createElement('div');
         reasyHouseDiv.setAttribute('id', com.reasy.reasy.houseDivName);
@@ -269,7 +267,7 @@ com.reasy.reasy = {
         if (0 == background_opacity) {
             // create menu/close button div
             var closeButton = doc.createElement('button');
-            closeButton.onmouseup = function(evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
+            closeButton.onmouseup = function (evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
             closeButton.style.cursor = 'default';
             closeButton.appendChild(doc.createTextNode('x'));
             closeButton.style.width = '20px';
@@ -282,7 +280,7 @@ com.reasy.reasy = {
         else {
             //cover background with opaque overlay
             var opaque_bg = doc.createElement('div');
-            opaque_bg.onmouseup = function(evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
+            opaque_bg.onmouseup = function (evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
             opaque_bg.style.width = '100%';
             opaque_bg.style.height = '100%';
             opaque_bg.style.position = 'fixed';
@@ -307,7 +305,7 @@ com.reasy.reasy = {
         var reasyWPMText = doc.createTextNode(db.wpm());
         {
             var incWpmDiv = doc.createElement('div');
-            incWpmDiv.onmousedown = function() { com.reasy.reasy.incWPM(reasyWPMText); }
+            incWpmDiv.onmousedown = function () { com.reasy.reasy.incWPM(reasyWPMText); }
             incWpmDiv.appendChild(doc.createTextNode('+'));
             incWpmDiv.style.cursor = 'default';
             wpmDiv.appendChild(incWpmDiv);
@@ -317,7 +315,7 @@ com.reasy.reasy = {
         wpmDiv.style.padding = '10px';
 
         var decWpmDiv = doc.createElement('div');
-        decWpmDiv.onmousedown = function() { com.reasy.reasy.decWPM(reasyWPMText); }
+        decWpmDiv.onmousedown = function () { com.reasy.reasy.decWPM(reasyWPMText); }
         decWpmDiv.appendChild(doc.createTextNode('-'));
         decWpmDiv.style.cursor = 'default';
         wpmDiv.appendChild(decWpmDiv);
@@ -327,7 +325,7 @@ com.reasy.reasy = {
         var fixationDiv = doc.createElement('div');
 
         var incFixationDiv = doc.createElement('div');
-        incFixationDiv.onmousedown = function() { com.reasy.reasy.incFixation(reasyFixationText); }
+        incFixationDiv.onmousedown = function () { com.reasy.reasy.incFixation(reasyFixationText); }
         incFixationDiv.style.cursor = 'default';
         incFixationDiv.appendChild(doc.createTextNode('+'));
         fixationDiv.appendChild(incFixationDiv);
@@ -336,7 +334,7 @@ com.reasy.reasy = {
         fixationDiv.style.padding = '10px';
 
         var decFixationDiv = doc.createElement('div');
-        decFixationDiv.onmousedown = function() { com.reasy.reasy.decFixation(reasyFixationText); }
+        decFixationDiv.onmousedown = function () { com.reasy.reasy.decFixation(reasyFixationText); }
         decFixationDiv.style.cursor = 'default';
         decFixationDiv.appendChild(doc.createTextNode('-'));
         fixationDiv.appendChild(decFixationDiv);
@@ -381,32 +379,31 @@ com.reasy.reasy = {
 
                 if (0 == i % 2)	// set opacity of leading and trailing lines
                 {
-                  var opacity = db.multi_line_opacity();
+                    var opacity = db.multi_line_opacity();
                     if (opacity > 0)
                         textDiv.style.opacity = parseFloat() / 100.0;
                 }
                 textDiv.style.padding = bwidth;
             }
             textDiv.appendChild(reasyDiv[i]);
-            textDiv.onmousedown = function() { reasyReader.playPause(); };
+            textDiv.onmousedown = function () { reasyReader.playPause(); };
             textDiv.style.cursor = 'default';
             reasyHouseDiv.appendChild(textDiv);
         }
 
-        reasyHouseDiv.onmousedown = function(evt) { com.reasy.reasy.houseClicked(evt, reasyHouseDiv); };
-        reasyHouseDiv.onmouseup = function(evt) { com.reasy.reasy.mouseUp(evt, reasyHouseDiv); };
-        reasyHouseDiv.onmouseover = function(evt) { com.reasy.reasy.mouseOver(evt, reasyHouseDiv); };
+        reasyHouseDiv.onmousedown = com.reasy.reasy.houseClicked;
+        reasyHouseDiv.onmouseover = com.reasy.reasy.mouseOver;
 
         com.reasy.reasy.setOrReplaceNode(com.reasy.reasy.houseDivName, reasyHouseDiv);
 
-        com.reasy.reasy.keyFn = function() { reasyReader.playPause(); };
-        com.reasy.reasy.fwdFn = function() { reasyReader.fwd(); };
-        com.reasy.reasy.backFn = function() { reasyReader.back(); };
+        com.reasy.reasy.keyFn = function () { reasyReader.playPause(); };
+        com.reasy.reasy.fwdFn = function () { reasyReader.fwd(); };
+        com.reasy.reasy.backFn = function () { reasyReader.back(); };
         if (db.auto_play())
             reasyReader.playPause();
     },
 
-    select: function() {
+    select: function () {
         // get the text content if there is not an existing reasy session
         if (content && content.document && !content.document.getElementById(com.reasy.reasy.houseDivName)) {
             var gotText = com.reasy.reasy.getIFrameSelection(content.document);
@@ -421,16 +418,16 @@ com.reasy.reasy = {
     },
 
     keyDown: function (evt) {
-      var db = com.reasy.reasy_db.singleton();
-      if (db.action_key().charCodeAt(0) == evt.which)
-        com.reasy.reasy.keyFn();
-      else if ((db.fwd_key().charCodeAt(0) == evt.which) && com.reasy.reasy.fwdFn)
-        com.reasy.reasy.fwdFn();
-      else if ((db.back_key().charCodeAt(0) == evt.which) && com.reasy.reasy.backFn)
-        com.reasy.reasy.backFn();
+        var db = com.reasy.reasy_db.singleton();
+        if (db.action_key().charCodeAt(0) == evt.which)
+            com.reasy.reasy.keyFn();
+        else if ((db.fwd_key().charCodeAt(0) == evt.which) && com.reasy.reasy.fwdFn)
+            com.reasy.reasy.fwdFn();
+        else if ((db.back_key().charCodeAt(0) == evt.which) && com.reasy.reasy.backFn)
+            com.reasy.reasy.backFn();
     },
 
-    windowFocus: function(evt) {
+    windowFocus: function (evt) {
         if (!com.reasy.reasy.keyFn)
             com.reasy.reasy.keyFn = com.reasy.reasy.select;
         if (com.reasy.reasy_db.singleton().auto_popup())
@@ -438,7 +435,7 @@ com.reasy.reasy = {
         content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
     },
 
-    windowUnload: function(evt) {
+    windowUnload: function (evt) {
         content.document.removeEventListener("mouseup", com.reasy.reasy.select, false);
         content.document.removeEventListener("keydown", com.reasy.reasy.keyDown, false);
     }
