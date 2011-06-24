@@ -1,0 +1,21 @@
+<!ENTITY readingpane.label "Reading">
+<!ENTITY checkbox.deselect_close.label "deselect text on close">
+<!ENTITY checkbox.auto_play.label "auto play">
+<!ENTITY checkbox.ticker_tape.label "ticker tape">
+<!ENTITY checkbox.pre_post.label "Show leading and trailing line">
+<!ENTITY label.pre_post_opacity "With opacity">
+<!ENTITY checkbox.live_ink.label "Live Ink pseudo-emulator">
+<!ENTITY label.punctuation_pause "Punctuation pause (ms):">
+<!ENTITY label.skip_words "Skip over words">
+<!ENTITY label.skip_forward "Skip forward action key:">
+<!ENTITY label.skip_back "Skip back action key:">
+<!ENTITY presentationpane.label "Presentation">
+<!ENTITY label.font "Font">
+<!ENTITY label.size "Size">
+<!ENTITY checkbox.display_immediately.label "display immediately">
+<!ENTITY label.min_word_selection "after selecting how many words:">
+<!ENTITY label.wait_action_key "or wait for action key:">
+<!ENTITY label.dim_background "and dim original page by (percent):">
+<!ENTITY label.multi_line_spacing "multi-line text spacing">
+<!ENTITY colorpane.label "Color scheme">
+<!ENTITY label.colour_scheme "Color scheme">

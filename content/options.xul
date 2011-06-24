@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE window SYSTEM "chrome://reasy/locale/options.dtd">
+
 <prefwindow id="reasy-options-overlay"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     title="Reasy Settings">
 
-  <prefpane id="Reading" label="Reading">
+  <prefpane id="Reading" label="&readingpane.label;">
 
     <preferences>
       <preference id="pref_deselect_close" name="extensions.reasy.deselect_close" type="bool"/>
@@ -19,34 +22,34 @@
       <preference id="pref_back_key" name="extensions.reasy.back_key" type="string"/>
     </preferences>
 
-    <checkbox id="deselect_close" label="deselect text on close" preference="pref_deselect_close" />
+    <checkbox id="deselect_close" label="&checkbox.deselect_close.label;" preference="pref_deselect_close" />
 
-    <checkbox id="auto_play" label="auto play" preference="pref_auto_play" />
+    <checkbox id="auto_play" label="&checkbox.auto_play.label;" preference="pref_auto_play" />
 
-    <checkbox id="ticker" label="ticker tape" preference="pref_ticker" />
+    <checkbox id="ticker" label="&checkbox.ticker_tape.label;" preference="pref_ticker" />
 
-    <checkbox id="pre_post" label="Show leading and trailing line" preference="pref_pre_post" />
+    <checkbox id="pre_post" label="&checkbox.pre_post.label;" preference="pref_pre_post" />
 
-    <label value="With opacity" id="multi_opacity_label" />
+    <label value="&label.pre_post_opacity;" id="multi_opacity_label" />
     <textbox type="number" min="0" max="100" preference="pref_multi_line_opacity" />
 
-    <checkbox id="live_ink" label="Live Ink pseudo-emulator" preference="pref_live_ink" />
+    <checkbox id="live_ink" label="&checkbox.live_ink.label;" preference="pref_live_ink" />
 
-    <label value="Punctuation pause (ms):" />
+    <label value="&label.punctuation_pause;" />
     <textbox type="number" min="0" max="250" preference="pref_punc_pause" />
 
-    <label value="Skip over words" />
+    <label value="&label.skip_words;" />
     <textbox type="number" min="0" max="250" preference="pref_skip_count" />
 
-    <label value="Skip forward action key:" />
+    <label value="&label.skip_forward;" />
     <textbox preference="pref_fwd_key" maxlength="1"/>
 
-    <label value="Skip back action key:" />
+    <label value="&label.skip_back;" />
     <textbox preference="pref_back_key" maxlength="1"/>
 
   </prefpane>
 
-  <prefpane id="Presentation" label="Presentation">
+  <prefpane id="Presentation" label="&presentationpane.label;">
 
     <preferences>
       <preference id="pref_font" name="extensions.reasy.font_family" type="string"/>
@@ -60,23 +63,23 @@
     </preferences>
 
     <groupbox>
-      <caption label="Font" />
+      <caption label="&label.font;" />
       <textbox preference="pref_font" />
-      <label value="Size" />
+      <label value="&label.size;" />
       <textbox type="number" min="6" preference="pref_font_size" />
     </groupbox>
 
-    <checkbox id="auto_popup" label="display immediately" preference="pref_auto_popup" />
-    <label value="after selecting how many words:" />
+    <checkbox id="auto_popup" label="&checkbox.display_immediately.label;" preference="pref_auto_popup" />
+    <label value="&label.min_word_selection;" />
     <textbox type="number" min="10" preference="pref_min_words" />
 
-    <label value="or wait for action key:" />
+    <label value="&label.wait_action_key;" />
     <textbox preference="pref_action_key" maxlength="1"/>
 
-    <label value="and dim original page by (%):" />
+    <label value="&label.dim_background;" />
     <textbox type="number" min="0" max="100" preference="pref_dim_background" />
 
-    <label value="multi-line text spacing" />
+    <label value="&label.multi_line_spacing;" />
     <textbox type="number" min="0" max="100" preference="pref_text_border" />
 
     <label value="z-index" />
@@ -84,14 +87,14 @@
 
   </prefpane>
 
-  <prefpane id="Colours" label="Color scheme">
+  <prefpane id="Colours" label="&colorpane.label;">
     
     <preferences>
       <preference id="pref_text_color" name="extensions.reasy.txtcolor" type="string"/>
       <preference id="pref_text_bg_color" name="extensions.reasy.bgcolor" type="string"/>
     </preferences>
 
-    <caption label="Color scheme" />
+    <caption label="&label.colour_scheme;" />
     <colorpicker type="button" preference="pref_text_color" />
     <colorpicker type="button" preference="pref_text_bg_color" />
   </prefpane>
