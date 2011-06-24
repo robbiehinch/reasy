@@ -3,7 +3,8 @@
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <RDF:Description RDF:about="urn:mozilla:extension:file:"
-                   em:locale="locale/en-US/" />
+                   em:locale="locale/en-US/" 
+                   em:type="8"/>
   <RDF:Description RDF:about="rdf:#$wNCK81"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
                    em:minVersion="3.0.*"
@@ -11,6 +12,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{fcff419f-5bfb-40cd-b52c-8f55dc2d0511}"
                    em:name="Reasy"
+                   em:type="2"
                    em:version="0.0.9"
                    em:creator="Rob Hinchliff"
                    em:description="RSVP (Rapid Sequential Visual Presentation) Reader"
