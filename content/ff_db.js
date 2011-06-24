@@ -206,32 +206,40 @@ com.reasy.ff_db.DB.prototype.top = function() {
   return this.db().getIntPref('top');
 }
 
-com.reasy.ff_db.DB.prototype.setTop = function(val) {
+com.reasy.ff_db.DB.prototype.setTop = function (val) {
+  val = Math.max(val, 0);
   this.db().setIntPref('top', val);
+  return val;
 }
 
 com.reasy.ff_db.DB.prototype.height = function() {
   return this.db().getIntPref('height');
 }
 
-com.reasy.ff_db.DB.prototype.setHeight = function(val) {
+com.reasy.ff_db.DB.prototype.setHeight = function (val) {
+  val = Math.max(val, 100);
   this.db().setIntPref('height', val);
+  return val;
 }
 
 com.reasy.ff_db.DB.prototype.left = function() {
   return this.db().getIntPref('left');
 }
 
-com.reasy.ff_db.DB.prototype.setLeft = function(val) {
+com.reasy.ff_db.DB.prototype.setLeft = function (val) {
+  val = Math.max(val, 0);
   this.db().setIntPref('left', val);
+  return val;
 }
 
 com.reasy.ff_db.DB.prototype.width = function() {
   return this.db().getIntPref('width');
 }
 
-com.reasy.ff_db.DB.prototype.setWidth = function(val) {
+com.reasy.ff_db.DB.prototype.setWidth = function (val) {
+  val = Math.max(val, 200);
   this.db().setIntPref('width', val);
+  return val;
 }
 
 com.reasy.ff_db.DB.prototype.auto_popup = function() {

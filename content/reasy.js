@@ -77,48 +77,40 @@ com.reasy.reasy = {
     moveFunction: function (evt, div, old_x, old_y) {
         var ntop = (parseInt(div.style.top) + evt.clientY - old_y);
         var nleft = (parseInt(div.style.left) + evt.clientX - old_x);
-        div.style.top = ntop + 'px';
-        div.style.left = nleft + 'px';
         var db = com.reasy.reasy_db.singleton();
-        db.setTop(ntop);
-        db.setLeft(nleft);
+        div.style.top = db.setTop(ntop) + 'px';
+        div.style.left = db.setLeft(nleft) + 'px';
     },
 
     sizeLeft: function (evt, div, old_x, old_y) {
         var diff = evt.clientX - old_x;
         var nleft = parseInt(div.style.left) + diff;
         var nwidth = parseInt(div.style.width) - diff;
-        div.style.left = nleft + 'px';
-        div.style.width = nwidth + 'px';
         var db = com.reasy.reasy_db.singleton();
-        db.setLeft(nleft);
-        db.setWidth(nwidth);
+        div.style.left = db.setLeft(nleft) + 'px';
+        div.style.width = db.setWidth(nwidth) + 'px';
     },
 
     sizeRight: function (evt, div, old_x, old_y) {
         var diff = evt.clientX - old_x;
         var nwidth = parseInt(div.style.width) + diff;
-        div.style.width = nwidth + 'px';
-        com.reasy.reasy_db.singleton().setWidth(nwidth);
+        div.style.width = com.reasy.reasy_db.singleton().setWidth(nwidth) + 'px';
     },
 
     sizeTop: function (evt, div, old_x, old_y) {
         var diff = evt.clientY - old_y;
         var ntop = parseInt(div.style.top) + diff;
         var nheight = parseInt(div.style.height) - diff;
-        div.style.top = ntop + 'px';
-        div.style.height = nheight + 'px';
         var db = com.reasy.reasy_db.singleton();
-        db.setTop(ntop);
-        db.setHeight(nheight);
+        div.style.top = db.setTop(ntop) + 'px';
+        div.style.height = db.setHeight(nheight) + 'px';
     },
 
     sizeBottom: function (evt, div, old_x, old_y) {
         var diff = evt.clientY - old_y;
         var nheight = parseInt(div.style.height) + diff;
-        div.style.height = nheight + 'px';
-        com.reasy.reasy_db.singleton().setHeight(nheight);
-    },
+        div.style.height = com.reasy.reasy_db.singleton().setHeight(nheight) + 'px';
+      },
 
     mouseMove: function (evt, myXY, div, move_fn) {
         var nx = evt.clientX;
@@ -237,20 +229,20 @@ com.reasy.reasy = {
 
         var db = com.reasy.reasy_db.singleton();
         var db_top = db.top();
-        if (db_top < -100)
+        if (db_top < 0)
             db_top = doc.height / 5;
         reasyHouseDiv.style.top = db_top + 'px';
         var db_left = db.left();
-        if (db_left < -100)
+        if (db_left < 0)
             db_left = doc.width / 5;
         reasyHouseDiv.style.left = db_left + 'px';
         var db_height = db.height();
         if (db_height <= 0)
-            db_height = db_top * 3;
+          db_height = Math.max(db_top * 3, 100);
         reasyHouseDiv.style.height = db_height + 'px';
         var db_width = db.width();
         if (db_width <= 0)
-            db_width = db_left * 3;
+            db_width = Math.max(db_left * 3, 200);
         reasyHouseDiv.style.width = db_width + 'px';
         reasyHouseDiv.style.zIndex = db.zIndex() + 1;
         db.bkgColor(reasyHouseDiv);
@@ -427,7 +419,7 @@ com.reasy.reasy = {
             com.reasy.reasy.backFn();
     },
 
-    windowFocus: function (evt) {
+    attachListeners: function (evt) {
         if (!com.reasy.reasy.keyFn)
             com.reasy.reasy.keyFn = com.reasy.reasy.select;
         if (com.reasy.reasy_db.singleton().auto_popup())
@@ -460,5 +452,6 @@ com.reasy.reasy.XY.prototype.diff_coords = function(x, y) {
 
 //alert("reasy2");
 
-window.addEventListener("focus", com.reasy.reasy.windowFocus, true);
+window.addEventListener("load", com.reasy.reasy.attachListeners, true);
+window.addEventListener("focus", com.reasy.reasy.attachListeners, true);
 window.addEventListener("unload", com.reasy.reasy.windowUnload, true);
