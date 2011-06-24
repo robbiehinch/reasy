@@ -11,10 +11,10 @@
                    em:homepageURL="http://sites.google.com/site/reasyreader/"
                    em:iconURL="chrome://reasy/content/reasy_logo.png"
                    em:optionsURL="chrome://reasy/content/options.xul">
-    <em:targetApplication RDF:resource="rdf:#$rqLOY1"/>
+    <em:targetApplication RDF:resource="rdf:#$cVHx73"/>
   </RDF:Description>
-  <RDF:Description RDF:about="rdf:#$rqLOY1"
+  <RDF:Description RDF:about="rdf:#$cVHx73"
                    em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   em:minVersion="3.*"
+                   em:minVersion="3.0.*"
                    em:maxVersion="5.*" />
 </RDF:RDF>
