@@ -144,12 +144,12 @@ com.reasy.reasy = {
     myXY = new com.reasy.reasy.XY(x, y);
     var mv_fn = function(newevt) { com.reasy.reasy.mouseMove(newevt, myXY, div, fn); };
 
-    var remove_fn = function() {
+    var remove_fn = function removeFn() {
       div.style.cursor = 'default';
       div.removeEventListener("mousemove", mv_fn, false);
       content.document.removeEventListener("mousemove", mv_fn, false);
-      div.removeEventListener("mouseup", this, false);
-      content.document.removeEventListener("mouseup", this, false);
+      div.removeEventListener("mouseup", removeFn, false);
+      content.document.removeEventListener("mouseup", removeFn, false);
     }
 
     div.addEventListener("mousemove", mv_fn, false);
