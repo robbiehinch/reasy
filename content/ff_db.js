@@ -251,12 +251,16 @@ com.reasy.ff_db.DB.prototype.invert_auto_popup = function() {
 }
 
 com.reasy.ff_db.DB.prototype.action_key = function() {
-  return this.db().getCharPref('action_key');
+  var action_key = this.db().getCharPref('action_key');
+  var action_key_u = action_key.toUpperCase();
+  if (action_key != action_key_u)
+    this.set_action_key(action_key_u);
+  return action_key_u;
 }
 
 com.reasy.ff_db.DB.prototype.set_action_key = function(val) {
   if (val && '' != val)
-    this.db().setCharPref('action_key', val);
+    this.db().setCharPref('action_key', val.toUpperCase());
 }
 
 com.reasy.ff_db.DB.prototype.fwd_key = function() {
