@@ -159,7 +159,7 @@ com.reasy.reasy = {
     content.document.addEventListener("mouseup", remove_fn, false);
   },
 
-  mouseOver: function(evt, div) {
+  mouseOver: function(evt) {
     var x = evt.clientX;
     var y = evt.clientY;
     var div = evt.target;
@@ -258,18 +258,25 @@ com.reasy.reasy = {
     reasyHouseDiv.appendChild(menuDiv);
 
     var background_opacity = db.dim_background();
+
+    var buttonnode = doc.createElement('button');
+    buttonnode.style.cursor = 'default';
+    buttonnode.style.cssFloat = 'left';
+    buttonnode.style.fontWeight = 'bold';
+    buttonnode.style.borderRadius = '1em';
+    buttonnode.style.borderStyle = 'none';
+    buttonnode.style.MozAppearance = 'none';
+    buttonnode.style.backgroundColor = db.getTxtColor();
+    buttonnode.style.color = db.getBkgColor();
+    buttonnode.style.minWidth = "2em";
+    buttonnode.style.textAlign = "center";
+
     if (0 == background_opacity) {
       // create menu/close button div
-      var closeButton = doc.createElement('button');
+      var closeButton = buttonnode.cloneNode(true);
       closeButton.onmouseup = function(evt) { com.reasy.reasy.close(evt, reasyHouseDiv); };
-      closeButton.style.cursor = 'default';
+      closeButton.title = 'Exit';
       closeButton.appendChild(doc.createTextNode('x'));
-      closeButton.style.width = '20px';
-      closeButton.style.height = '20px';
-      closeButton.style.cssFloat = 'left';
-      closeButton.style.fontWeight = 'bold';
-      closeButton.style.borderStyle = 'none';
-      closeButton.style.borderRadius = '1em';
       menuDiv.appendChild(closeButton);
     }
     else {
@@ -299,9 +306,11 @@ com.reasy.reasy = {
     var wpmDiv = doc.createElement('div');
     var reasyWPMText = doc.createTextNode(db.wpm());
     {
+      var plus_button = buttonnode.cloneNode(true);
+      plus_button.appendChild(doc.createTextNode('+'));
+      plus_button.onmousedown = function() { com.reasy.reasy.incWPM(reasyWPMText); }
       var incWpmDiv = doc.createElement('div');
-      incWpmDiv.onmousedown = function() { com.reasy.reasy.incWPM(reasyWPMText); }
-      incWpmDiv.appendChild(doc.createTextNode('+'));
+      incWpmDiv.appendChild(plus_button);
       incWpmDiv.style.cursor = 'default';
       wpmDiv.appendChild(incWpmDiv);
     }
@@ -309,9 +318,12 @@ com.reasy.reasy = {
     wpmDiv.appendChild(reasyWPMText);
     wpmDiv.style.padding = '10px';
 
+    //    var minus_button = com.reasy.reasy.createButton(doc);
+    var minus_button = buttonnode.cloneNode(true);
+    minus_button.appendChild(doc.createTextNode('-'));
+    minus_button.onmousedown = function() { com.reasy.reasy.decWPM(reasyWPMText); }
     var decWpmDiv = doc.createElement('div');
-    decWpmDiv.onmousedown = function() { com.reasy.reasy.decWPM(reasyWPMText); }
-    decWpmDiv.appendChild(doc.createTextNode('-'));
+    decWpmDiv.appendChild(minus_button);
     decWpmDiv.style.cursor = 'default';
     wpmDiv.appendChild(decWpmDiv);
     settingsDiv.appendChild(wpmDiv)
@@ -319,19 +331,23 @@ com.reasy.reasy = {
     var reasyFixationText = doc.createTextNode(db.fixation());
     var fixationDiv = doc.createElement('div');
 
+    plus_button = buttonnode.cloneNode(true);
+    plus_button.appendChild(doc.createTextNode('+'));
+    plus_button.onmousedown = function() { com.reasy.reasy.incFixation(reasyFixationText); }
     var incFixationDiv = doc.createElement('div');
-    incFixationDiv.onmousedown = function() { com.reasy.reasy.incFixation(reasyFixationText); }
     incFixationDiv.style.cursor = 'default';
-    incFixationDiv.appendChild(doc.createTextNode('+'));
+    incFixationDiv.appendChild(plus_button);
     fixationDiv.appendChild(incFixationDiv);
 
     fixationDiv.appendChild(reasyFixationText);
     fixationDiv.style.padding = '10px';
 
+    minus_button = buttonnode.cloneNode(true);
+    minus_button.appendChild(doc.createTextNode('-'));
+    minus_button.onmousedown = function() { com.reasy.reasy.decFixation(reasyFixationText); }
     var decFixationDiv = doc.createElement('div');
-    decFixationDiv.onmousedown = function() { com.reasy.reasy.decFixation(reasyFixationText); }
     decFixationDiv.style.cursor = 'default';
-    decFixationDiv.appendChild(doc.createTextNode('-'));
+    decFixationDiv.appendChild(minus_button);
     fixationDiv.appendChild(decFixationDiv);
     settingsDiv.appendChild(fixationDiv);
 
@@ -430,7 +446,7 @@ com.reasy.reasy = {
     content.document.addEventListener("keydown", com.reasy.reasy.keyDown, false);
   },
 
-  windowUnload: function(evt) {
+  detachListeners: function(evt) {
     content.document.removeEventListener("mouseup", com.reasy.reasy.select, false);
     content.document.removeEventListener("keydown", com.reasy.reasy.keyDown, false);
   }
@@ -457,4 +473,4 @@ com.reasy.reasy.XY.prototype.diff_coords = function(x, y) {
 
 window.addEventListener("load", com.reasy.reasy.attachListeners, true);
 window.addEventListener("focus", com.reasy.reasy.attachListeners, true);
-window.addEventListener("unload", com.reasy.reasy.windowUnload, true);
+window.addEventListener("unload", com.reasy.reasy.detachListeners, true);
