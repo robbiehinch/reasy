@@ -264,7 +264,11 @@ com.reasy.ff_db.DB.prototype.set_action_key = function(val) {
 }
 
 com.reasy.ff_db.DB.prototype.fwd_key = function() {
-  return this.db().getCharPref('fwd_key');
+  var fwd_key = this.db().getCharPref('fwd_key');
+  var fwd_key_u = fwd_key.toUpperCase();
+  if (fwd_key != fwd_key_u)
+    this.set_action_key(fwd_key_u);
+  return fwd_key_u;
 }
 
 com.reasy.ff_db.DB.prototype.set_fwd_key = function(val) {
@@ -273,7 +277,11 @@ com.reasy.ff_db.DB.prototype.set_fwd_key = function(val) {
 }
 
 com.reasy.ff_db.DB.prototype.back_key = function() {
-  return this.db().getCharPref('back_key');
+  var back_key = this.db().getCharPref('back_key');
+  var back_key_u = back_key.toUpperCase();
+  if (back_key != back_key_u)
+    this.set_action_key(back_key_u);
+  return back_key_u;
 }
 
 com.reasy.ff_db.DB.prototype.set_back_key = function(val) {
