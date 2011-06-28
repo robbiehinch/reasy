@@ -2,23 +2,19 @@
 <RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
          xmlns:NC="http://home.netscape.com/NC-rdf#"
          xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-  <RDF:Description RDF:about="urn:mozilla:extension:file:"
-                   em:locale="locale/en-US/" 
-                   em:type="8"/>
-  <RDF:Description RDF:about="rdf:#$wNCK81"
-                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
-                   em:minVersion="3.0.*"
-                   em:maxVersion="5.*" />
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{fcff419f-5bfb-40cd-b52c-8f55dc2d0511}"
                    em:name="Reasy"
-                   em:type="2"
-                   em:version="0.0.9"
+                   em:version="0.0.10"
                    em:creator="Rob Hinchliff"
                    em:description="RSVP (Rapid Sequential Visual Presentation) Reader"
                    em:homepageURL="http://sites.google.com/site/reasyreader/"
                    em:iconURL="chrome://reasy/content/reasy_logo.png"
                    em:optionsURL="chrome://reasy/content/options.xul">
-    <em:targetApplication RDF:resource="rdf:#$wNCK81"/>
+    <em:targetApplication RDF:resource="rdf:#$bi8Jh2"/>
   </RDF:Description>
+  <RDF:Description RDF:about="rdf:#$bi8Jh2"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="3.0.*"
+                   em:maxVersion="5.*" />
 </RDF:RDF>
