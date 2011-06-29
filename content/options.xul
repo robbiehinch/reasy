@@ -60,6 +60,7 @@
       <preference id="pref_dim_background" name="extensions.reasy.dim_background" type="int"/>
       <preference id="pref_text_border" name="extensions.reasy.text_border" type="int"/>
       <preference id="pref_z_index" name="extensions.reasy.z_index" type="int"/>
+      <preference id="pref_justify" name="extensions.reasy.justify" type="bool"/>
     </preferences>
 
     <groupbox>
@@ -84,6 +85,8 @@
 
     <label value="z-index" />
     <textbox type="number" min="9" max="9999" preference="pref_z_index" />
+
+    <checkbox id="justify" label="justify" preference="pref_justify" />
 
   </prefpane>
 

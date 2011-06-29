@@ -379,7 +379,7 @@ com.reasy.reasy = {
       textDiv.style.fontSize = db.fontSize();
       textDiv.style.fontFamily = db.fontFamily();
       if (!pre_post_mode)
-        textDiv.style.textAlign = 'center';
+        textDiv.style.textAlign = db.Justify() ? "justify" : 'center';
       else {
         textDiv.style.textAlign = 'left';
         textDiv.style.position = 'relative';
