@@ -86,8 +86,6 @@
     <label value="z-index" />
     <textbox type="number" min="9" max="9999" preference="pref_z_index" />
 
-    <checkbox id="justify" label="justify" preference="pref_justify" />
-
   </prefpane>
 
   <prefpane id="Colours" label="&colorpane.label;">
