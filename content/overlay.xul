@@ -10,7 +10,7 @@
 	<popup id="contentAreaContextMenu">
 		<menuitem id="reasy-context"
 			label="Reasy..." accesskey="R" 
-			oncommand="com.reasy.reasy.select();" 
+			oncommand="reasy.reasy.select();" 
 			image="chrome://reasy/content/reasy_logo.png" 
 			class="menuitem-iconic"/>
 	</popup>

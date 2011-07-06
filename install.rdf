@@ -5,7 +5,7 @@
   <RDF:Description RDF:about="urn:mozilla:install-manifest"
                    em:id="{fcff419f-5bfb-40cd-b52c-8f55dc2d0511}"
                    em:name="Reasy"
-                   em:version="0.0.12"
+                   em:version="0.0.13"
                    em:creator="Rob Hinchliff"
                    em:description="RSVP (Rapid Sequential Visual Presentation) Reader"
                    em:homepageURL="http://sites.google.com/site/reasyreader/"
