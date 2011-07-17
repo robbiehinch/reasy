@@ -140,7 +140,7 @@ if (!reasy) var reasy = {};
 
       if (fn == reasy.reasy.moveFunction)
         div.style.cursor = 'move';
-      myXY = new reasy.reasy.XY(x, y);
+      var myXY = new reasy.reasy.XY(x, y);
       var mv_fn = function (newevt) { reasy.reasy.mouseMove(newevt, myXY, div, fn); };
 
       var remove_fn = function removeFn() {
@@ -375,6 +375,7 @@ if (!reasy) var reasy = {};
       reasyHouseDiv.appendChild(paddingDiv);
 
       var bwidth = db.get_text_border();
+      var i;
       for (i = 0; i < reasyDiv.length; i++) {
         var textDiv = doc.createElement('div');
         db.txtColor(textDiv);

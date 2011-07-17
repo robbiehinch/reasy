@@ -268,7 +268,7 @@ if (!reasy) var reasy = {};
     var fwd_key = this.db().getCharPref('fwd_key');
     var fwd_key_u = fwd_key.toUpperCase();
     if (fwd_key != fwd_key_u)
-      this.set_action_key(fwd_key_u);
+      this.set_fwd_key(fwd_key_u);
     return fwd_key_u;
   }
 
@@ -281,7 +281,7 @@ if (!reasy) var reasy = {};
     var back_key = this.db().getCharPref('back_key');
     var back_key_u = back_key.toUpperCase();
     if (back_key != back_key_u)
-      this.set_action_key(back_key_u);
+      this.set_back_key(back_key_u);
     return back_key_u;
   }
 
