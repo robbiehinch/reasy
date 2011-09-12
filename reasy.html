@@ -1,0 +1,29 @@
+<html>
+  
+  <head>
+  
+    <title>Reasy</title>
+    <!--link rel="stylesheet" href="css/panorama.css" type="text/css" /-->
+    
+  </head>
+  
+  <body>
+    
+      <input id="text" />
+
+      <div id="text_copy"></div>
+
+  </body>
+  
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" ></script>
+    <script type="text/javascript" src="jquery.cookie/cookie.js"></script>
+    <script type="text/javascript" src="content/reasy_browser_db.js"></script>
+    <script type="text/javascript" src="content/reasy_reader.js"></script>
+    <script type="text/javascript" src="content/reasy.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#text #textcopy').innerHtml("The following is an example of the XML that might be returned by the API in a term element. The API uses term elements to show the additional terms for the instrument that the XML record relates to. Table B.17 describes the attributes that may appear in a term element.");
+        });
+    </script>
+    
+</html>

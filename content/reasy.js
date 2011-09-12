@@ -448,8 +448,9 @@ if (!reasy) var reasy = {};
       if (!reasy.reasy.keyFn)
         reasy.reasy.keyFn = reasy.reasy.select;
       if (reasy.reasy_db.singleton().auto_popup())
-        content.document.addEventListener("mouseup", reasy.reasy.select, false);
-      content.document.addEventListener("keydown", reasy.reasy.keyDown, false);
+          content.document.addEventListener("mouseup", reasy.reasy.select, false);
+      if (!(typeof content === 'undefined') && content && content.document)
+          content.document.addEventListener("keydown", reasy.reasy.keyDown, false);
     },
 
     detachListeners: function (evt) {
