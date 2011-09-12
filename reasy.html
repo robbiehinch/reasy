@@ -21,8 +21,15 @@
     <script type="text/javascript" src="content/reasy_reader.js"></script>
     <script type="text/javascript" src="content/reasy.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#text #textcopy').innerHtml("The following is an example of the XML that might be returned by the API in a term element. The API uses term elements to show the additional terms for the instrument that the XML record relates to. Table B.17 describes the attributes that may appear in a term element.");
+        $('document').ready(function() {
+            var text_box = $('#text');
+            text_box.change(function() {
+                $('#text_copy').append(text_box.val());
+            });
+            var text = '{{ text }}';
+            if (text) {
+                text_box.val(text);
+            }
         });
     </script>
     

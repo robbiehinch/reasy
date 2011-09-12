@@ -1,0 +1,25 @@
+application: reasy
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /content/reasy.js
+  static_files: content/reasy.js
+  upload: content/reasy.js
+
+- url: /content/reasy_browser_db.js
+  static_files: content/reasy_browser_db.js
+  upload: content/reasy_browser_db.js
+  
+- url: /content/reasy_reader.js
+  static_files: content/reasy_reader.js
+  upload: content/  reasy_reader.js
+ 
+- url: /jquery.cookie/cookie.js
+  static_files: jquery.cookie/cookie.js
+  upload: jquery.cookie/cookie.js
+  
+- url: /.*
+  script: main.py
