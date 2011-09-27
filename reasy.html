@@ -21,6 +21,11 @@
     <script type="text/javascript" src="content/reasy_reader.js"></script>
     <script type="text/javascript" src="content/reasy.js"></script>
     <script type="text/javascript">
+        function pref(key, val) {
+            var key_split = key.split('.');
+            $.cookie(key_split[key_split.length - 1], val);
+        }
+        
         $('document').ready(function() {
             var text_box = $('#text');
             text_box.change(function() {
@@ -32,5 +37,6 @@
             }
         });
     </script>
+    <script type="text/javascript" src="defaults/preferences/reasy_prefs.js"></script>
     
 </html>

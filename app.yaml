@@ -20,6 +20,10 @@ handlers:
 - url: /jquery.cookie/cookie.js
   static_files: jquery.cookie/cookie.js
   upload: jquery.cookie/cookie.js
+ 
+- url: /defaults/preferences/reasy_prefs.js
+  static_files: defaults/preferences/reasy_prefs.js
+  upload: defaults/preferences/reasy_prefs.js
   
 - url: /.*
   script: main.py
