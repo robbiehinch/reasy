@@ -35,8 +35,8 @@ if (!reasy) var reasy = {};
         }
       }
 
-      var gotText = window.getSelection();
-      if (gotText.toString)
+      var gotText = content.window.getSelection();
+      if (reasy.reasy.major_ver > 2)
         gotText = gotText.toString();
 
       return gotText;
@@ -63,15 +63,15 @@ if (!reasy) var reasy = {};
 
     setOrReplaceNode: function (nodeName, node) {
       // replace the old div or add the div to the document
-      var oldNode = document.getElementById(nodeName);
+      var oldNode = content.document.getElementById(nodeName);
       if (oldNode) {
-        var result = document.body.replaceChild(node, oldNode);
+        var result = content.document.body.replaceChild(node, oldNode);
         if (null == result) {
-          document.body.appendChild(node);
+          content.document.body.appendChild(node);
         }
       }
       else
-        document.body.appendChild(node);
+        content.document.body.appendChild(node);
     },
 
     moveFunction: function (evt, div, old_x, old_y) {
@@ -146,16 +146,16 @@ if (!reasy) var reasy = {};
       var remove_fn = function removeFn() {
         div.style.cursor = 'default';
         div.removeEventListener("mousemove", mv_fn, false);
-        document.removeEventListener("mousemove", mv_fn, false);
+        content.document.removeEventListener("mousemove", mv_fn, false);
         div.removeEventListener("mouseup", removeFn, false);
-        document.removeEventListener("mouseup", removeFn, false);
+        content.document.removeEventListener("mouseup", removeFn, false);
       }
 
       div.addEventListener("mousemove", mv_fn, false);
-      document.addEventListener("mousemove", mv_fn, false);
+      content.document.addEventListener("mousemove", mv_fn, false);
 
       div.addEventListener("mouseup", remove_fn, false);
-      document.addEventListener("mouseup", remove_fn, false);
+      content.document.addEventListener("mouseup", remove_fn, false);
     },
 
     mouseOver: function (evt) {
@@ -197,17 +197,17 @@ if (!reasy) var reasy = {};
 //      console.log("reasy close");
 //      console.log(evt);
 //      console.log(div);
-      var reasyDiv = document.getElementById(reasy.reasy.houseDivName);
+      var reasyDiv = content.document.getElementById(reasy.reasy.houseDivName);
       if (reasyDiv)
-        document.body.removeChild(reasyDiv);
+        content.document.body.removeChild(reasyDiv);
 
-      var bg = document.getElementById(reasy.reasy.opaqueBGName);
+      var bg = content.document.getElementById(reasy.reasy.opaqueBGName);
       if (bg)
-        document.body.removeChild(bg);
+        content.document.body.removeChild(bg);
 
       if (div || reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
       {
-        var sel = window.getSelection();
+        var sel = content.window.getSelection();
         if (sel && sel.removeAllRanges)
           sel.removeAllRanges();
       }
@@ -422,8 +422,8 @@ if (!reasy) var reasy = {};
 
     select: function () {
       // get the text content if there is not an existing reasy session
-      if (document && !document.getElementById(reasy.reasy.houseDivName)) {
-        var gotText = reasy.reasy.getIFrameSelection(document);
+      if (content && content.document && !content.document.getElementById(reasy.reasy.houseDivName)) {
+        var gotText = reasy.reasy.getIFrameSelection(content.document);
 
         if (gotText) {
           var split = gotText.split(/[-\u2013\u2014\s]/gi);
@@ -448,22 +448,14 @@ if (!reasy) var reasy = {};
       if (!reasy.reasy.keyFn)
         reasy.reasy.keyFn = reasy.reasy.select;
       if (reasy.reasy_db.singleton().auto_popup())
-          document.addEventListener("mouseup", reasy.reasy.select, false);
-      if (!(typeof content === 'undefined') && content && document)
-          document.addEventListener("keydown", reasy.reasy.keyDown, false);
-      else if (!(typeof document === 'undefined') && document)
-          document.addEventListener("keydown", reasy.reasy.keyDown, false);
-  },
+          content.document.addEventListener("mouseup", reasy.reasy.select, false);
+      if (!(typeof content === 'undefined') && content && content.document)
+          content.document.addEventListener("keydown", reasy.reasy.keyDown, false);
+    },
 
     detachListeners: function (evt) {
-        if (!(typeof content === 'undefined') && content && document) {
-          document.removeEventListener("mouseup", reasy.reasy.select, false);
-          document.removeEventListener("keydown", reasy.reasy.keyDown, false);
-        }
-        if (!(typeof document === 'undefined') && document) {
-            document.removeEventListener("mouseup", reasy.reasy.select, false);
-            document.removeEventListener("keydown", reasy.reasy.keyDown, false);
-        }
+      content.document.removeEventListener("mouseup", reasy.reasy.select, false);
+      content.document.removeEventListener("keydown", reasy.reasy.keyDown, false);
     }
   }
 
