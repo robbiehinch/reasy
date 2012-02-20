@@ -44,7 +44,7 @@ if (!reasy) var reasy = {};
             if (val)
                 return val;
             return false;
-        },
+        }
     }
 
     if (!reasy.reasy_db) reasy.reasy_db = {};

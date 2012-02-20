@@ -14,9 +14,40 @@ if (!reasy) var reasy = {};
       this.x = x;
       this.y = y;
     },
+
+    XBrowserGetSelection: function(doc) {
+        var selection = '';
+        var window = reasy.reasy.XBrowserWindow();
+        if (!window.getSelection) {
+            var document = reasy.reasy.XBrowserDocument();
+            selection = document.selection.createRange().htmlText;
+        }
+        else {
+          selection = reasy.reasy.XBrowserWindow().getSelection();
+          if (selection.toString)
+            selection = selection.toString();
+        }
+        return selection;
+    },
+    
+    XBrowserAddEventListener: function(el, eventName, fn, b) {
+        if (el.addEventListener) {
+            el.addEventListener(eventName, fn, b);
+        } else if (el.attachEvent) {  
+            el.attachEvent('on' + eventName, fn);
+        }
+    },
+    
+    XBrowserRemoveEventListener: function(el, eventName, fn, b) {
+        if (el.addEventListener) {
+            el.removeEventListener(eventName, fn, b);
+        } else if (el.attachEvent) {  
+            el.detachEvent(eventName, fn);
+        }
+    },
     
     //http://james.padolsey.com/javascript/get-document-height-cross-browser/
-    CrossBrowserHeight: function (doc) {
+    XBrowserHeight: function (doc) {
         return Math.max(
             Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight),
             Math.max(doc.body.offsetHeight, doc.documentElement.offsetHeight),
@@ -24,7 +55,7 @@ if (!reasy) var reasy = {};
         );
     },
 
-    CrossBrowserWidth: function (doc) {
+    XBrowserWidth: function (doc) {
         return Math.max(
             Math.max(doc.body.scrollWidth, doc.documentElement.scrollWidth),
             Math.max(doc.body.offsetWidth, doc.documentElement.offsetWidth),
@@ -32,7 +63,7 @@ if (!reasy) var reasy = {};
         );
     },
 
-    CrossBrowserDocument: function() {
+    XBrowserDocument: function() {
         if (!(typeof content === 'undefined') && content && content.document)
             return content.document;
         if (!(typeof document === 'undefined') && document)
@@ -40,7 +71,7 @@ if (!reasy) var reasy = {};
         return null;
     },
 
-    CrossBrowserWindow: function() {
+    XBrowserWindow: function() {
         if (!(typeof content === 'undefined') && content && content.window)
             return content.window;
         if (!(typeof window === 'undefined') && window)
@@ -52,16 +83,12 @@ if (!reasy) var reasy = {};
       if (!doc)
         return "";
 
-      var gotText = reasy.reasy.CrossBrowserWindow().getSelection();
-      if (gotText.toString)
-        gotText = gotText.toString();
-
-      return gotText;
+      return reasy.reasy.XBrowserGetSelection(doc);
     },
 
     getIFrameSelection: function (doc) {
       var ret = reasy.reasy.getContentSelectedText(doc);
-      for (var f in reasy.reasy.CrossBrowserWindow().frames) {
+      for (var f in reasy.reasy.XBrowserWindow().frames) {
         if (f.contentWindow) {
           			console.log("frame.contentWindow");
           ret += reasy.reasy.getContentSelectedText(f.contentWindow);
@@ -79,7 +106,7 @@ if (!reasy) var reasy = {};
     },
 
     setOrReplaceNode: function (nodeName, node) {
-      var doc = reasy.reasy.CrossBrowserDocument();
+      var doc = reasy.reasy.XBrowserDocument();
       // replace the old div or add the div to the document
       var oldNode = doc.getElementById(nodeName);
       if (oldNode) {
@@ -161,20 +188,20 @@ if (!reasy) var reasy = {};
       var myXY = new reasy.reasy.XY(x, y);
       var mv_fn = function (newevt) { reasy.reasy.mouseMove(newevt, myXY, div, fn); };
 
-      var doc = reasy.reasy.CrossBrowserDocument();
+      var doc = reasy.reasy.XBrowserDocument();
       var remove_fn = function removeFn() {
         div.style.cursor = 'default';
-        div.removeEventListener("mousemove", mv_fn, false);
-        doc.removeEventListener("mousemove", mv_fn, false);
-        div.removeEventListener("mouseup", removeFn, false);
-        doc.removeEventListener("mouseup", removeFn, false);
+        reasy.reasy.XBrowserRemoveEventListener(div, "mousemove", mv_fn, false);
+        reasy.reasy.XBrowserRemoveEventListener(doc, "mousemove", mv_fn, false);
+        reasy.reasy.XBrowserRemoveEventListener(div, "mouseup", removeFn, false);
+        reasy.reasy.XBrowserRemoveEventListener(doc, "mouseup", removeFn, false);
       }
 
-      div.addEventListener("mousemove", mv_fn, false);
-      doc.addEventListener("mousemove", mv_fn, false);
+      reasy.reasy.XBrowserAddEventListener(div, "mousemove", mv_fn, false);
+      reasy.reasy.XBrowserAddEventListener(doc, "mousemove", mv_fn, false);
 
-      div.addEventListener("mouseup", remove_fn, false);
-      doc.addEventListener("mouseup", remove_fn, false);
+      reasy.reasy.XBrowserAddEventListener(div, "mouseup", remove_fn, false);
+      reasy.reasy.XBrowserAddEventListener(doc, "mouseup", remove_fn, false);
     },
 
     mouseOver: function (evt) {
@@ -216,7 +243,7 @@ if (!reasy) var reasy = {};
 //      console.log("reasy close");
 //      console.log(evt);
 //      console.log(div);
-      var doc = reasy.reasy.CrossBrowserDocument();
+      var doc = reasy.reasy.XBrowserDocument();
       var reasyDiv = doc.getElementById(reasy.reasy.houseDivName);
       if (reasyDiv)
         doc.body.removeChild(reasyDiv);
@@ -227,7 +254,7 @@ if (!reasy) var reasy = {};
 
       if (div || reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
       {
-        var sel = reasy.reasy.CrossBrowserWindow().getSelection();
+        var sel = reasy.reasy.XBrowserWindow().getSelection();
         if (sel && sel.removeAllRanges)
           sel.removeAllRanges();
       }
@@ -256,11 +283,11 @@ if (!reasy) var reasy = {};
       var db = reasy.reasy_db.singleton();
       var db_top = db.top();
       if (db_top < 0)
-        db_top = reasy.reasy.CrossBrowserHeight(doc) / 5;
+        db_top = reasy.reasy.XBrowserHeight(doc) / 5;
       reasyHouseDiv.style.top = db_top + 'px';
       var db_left = db.left();
       if (db_left < 0)
-        db_left = reasy.reasy.CrossBrowserWidth(doc) / 5;
+        db_left = reasy.reasy.XBrowserWidth(doc) / 5;
       reasyHouseDiv.style.left = db_left + 'px';
       var db_height = db.height();
       if (db_height <= 0)
@@ -442,7 +469,7 @@ if (!reasy) var reasy = {};
 
     select: function () {
       // get the text content if there is not an existing reasy session
-      var doc = reasy.reasy.CrossBrowserDocument();
+      var doc = reasy.reasy.XBrowserDocument();
       if (doc && !doc.getElementById(reasy.reasy.houseDivName)) {
         var gotText = reasy.reasy.getIFrameSelection(doc);
 
@@ -466,19 +493,19 @@ if (!reasy) var reasy = {};
     },
 
     attachListeners: function (evt) {
-      var doc = reasy.reasy.CrossBrowserDocument();
+      var doc = reasy.reasy.XBrowserDocument();
       if (!reasy.reasy.keyFn)
         reasy.reasy.keyFn = reasy.reasy.select;
       if (reasy.reasy_db.singleton().auto_popup())
-          doc.addEventListener("mouseup", reasy.reasy.select, false);
+          reasy.reasy.XBrowserAddEventListener(doc, "mouseup", reasy.reasy.select, false);
       if (doc)
-          doc.addEventListener("keydown", reasy.reasy.keyDown, false);
+          reasy.reasy.XBrowserAddEventListener(doc, "keydown", reasy.reasy.keyDown, false);
     },
 
     detachListeners: function (evt) {
-      var doc = reasy.reasy.CrossBrowserDocument();
-      doc.removeEventListener("mouseup", reasy.reasy.select, false);
-      doc.removeEventListener("keydown", reasy.reasy.keyDown, false);
+      var doc = reasy.reasy.XBrowserDocument();
+      reasy.reasy.XBrowserRemoveEventListener(doc, "mouseup", reasy.reasy.select, false);
+      reasy.reasy.XBrowserRemoveEventListener(doc, "keydown", reasy.reasy.keyDown, false);
     }
   }
 
@@ -505,9 +532,9 @@ if (!reasy) var reasy = {};
 
 //console.log("adding listeners");
 
-window.addEventListener("load", reasy.reasy.attachListeners, true);
+reasy.reasy.XBrowserAddEventListener(window, "load", reasy.reasy.attachListeners, true);
 //console.log("added load listener");
-window.addEventListener("focus", reasy.reasy.attachListeners, true);
-window.addEventListener("unload", reasy.reasy.detachListeners, true);
+reasy.reasy.XBrowserAddEventListener(window, "focus", reasy.reasy.attachListeners, true);
+reasy.reasy.XBrowserAddEventListener(window, "unload", reasy.reasy.detachListeners, true);
 
 //console.log("added all listeners");
