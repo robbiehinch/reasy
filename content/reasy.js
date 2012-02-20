@@ -15,6 +15,23 @@ if (!reasy) var reasy = {};
       this.y = y;
     },
     
+    //http://james.padolsey.com/javascript/get-document-height-cross-browser/
+    CrossBrowserHeight: function (doc) {
+        return Math.max(
+            Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight),
+            Math.max(doc.body.offsetHeight, doc.documentElement.offsetHeight),
+            Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+        );
+    },
+
+    CrossBrowserWidth: function (doc) {
+        return Math.max(
+            Math.max(doc.body.scrollWidth, doc.documentElement.scrollWidth),
+            Math.max(doc.body.offsetWidth, doc.documentElement.offsetWidth),
+            Math.max(doc.body.clientWidth, doc.documentElement.clientWidth)
+        );
+    },
+
     CrossBrowserDocument: function() {
         if (!(typeof content === 'undefined') && content && content.document)
             return content.document;
@@ -239,11 +256,11 @@ if (!reasy) var reasy = {};
       var db = reasy.reasy_db.singleton();
       var db_top = db.top();
       if (db_top < 0)
-        db_top = doc.height / 5;
+        db_top = reasy.reasy.CrossBrowserHeight(doc) / 5;
       reasyHouseDiv.style.top = db_top + 'px';
       var db_left = db.left();
       if (db_left < 0)
-        db_left = doc.width / 5;
+        db_left = reasy.reasy.CrossBrowserWidth(doc) / 5;
       reasyHouseDiv.style.left = db_left + 'px';
       var db_height = db.height();
       if (db_height <= 0)
