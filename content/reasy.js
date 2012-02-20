@@ -9,34 +9,34 @@ if (!reasy) var reasy = {};
 
     houseDivName: 'reasyHouseTextDiv',
     opaqueBGName: 'reasyOpaqueBG',
-    major_ver: null,
-    //FirebugContext.window.console.log("Firefox ver ->", ver_string, major_ver);
-    //Firebug.Console.log("hello");
 
     XY: function XY(x, y) {
       this.x = x;
       this.y = y;
+    },
+    
+    CrossBrowserDocument: function() {
+        if (!(typeof content === 'undefined') && content && content.document)
+            return content.document;
+        if (!(typeof document === 'undefined') && document)
+            return document;
+        return null;
+    },
+
+    CrossBrowserWindow: function() {
+        if (!(typeof content === 'undefined') && content && content.window)
+            return content.window;
+        if (!(typeof window === 'undefined') && window)
+            return window;
+        return null;
     },
 
     getContentSelectedText: function (doc) {
       if (!doc)
         return "";
 
-      if (!reasy.reasy.major_ver) {
-        var ua = navigator.userAgent;
-        if (ua) {
-          var ff_index = ua.indexOf("Firefox");
-          if (ff_index >= 0) {
-            var ver_index = ff_index + "Firefox".length + 1;
-            reasy.reasy.major_ver = parseInt(ua.substring(ver_index).split(' ')[0]);
-          }
-          else
-            reasy.reasy.major_ver = 0;
-        }
-      }
-
-      var gotText = content.window.getSelection();
-      if (reasy.reasy.major_ver > 2)
+      var gotText = reasy.reasy.CrossBrowserWindow().getSelection();
+      if (gotText.toString)
         gotText = gotText.toString();
 
       return gotText;
@@ -44,17 +44,17 @@ if (!reasy) var reasy = {};
 
     getIFrameSelection: function (doc) {
       var ret = reasy.reasy.getContentSelectedText(doc);
-      for (var f in window.frames) {
+      for (var f in reasy.reasy.CrossBrowserWindow().frames) {
         if (f.contentWindow) {
-          //			Firebug.Console.log("frame.contentWindow");
+          			console.log("frame.contentWindow");
           ret += reasy.reasy.getContentSelectedText(f.contentWindow);
         }
         if (f.document) {
-          //			Firebug.Console.log("frame.document");
+          			console.log("frame.document");
           ret += reasy.reasy.getContentSelectedText(f.document);
         }
         if (f.contentDocument) {
-          //			Firebug.Console.log("frame.contentDocument");
+          			console.log("frame.contentDocument");
           ret += reasy.reasy.getContentSelectedText(f.contentDocument);
         }
       }
@@ -62,16 +62,17 @@ if (!reasy) var reasy = {};
     },
 
     setOrReplaceNode: function (nodeName, node) {
+      var doc = reasy.reasy.CrossBrowserDocument();
       // replace the old div or add the div to the document
-      var oldNode = content.document.getElementById(nodeName);
+      var oldNode = doc.getElementById(nodeName);
       if (oldNode) {
-        var result = content.document.body.replaceChild(node, oldNode);
+        var result = doc.body.replaceChild(node, oldNode);
         if (null == result) {
-          content.document.body.appendChild(node);
+          doc.body.appendChild(node);
         }
       }
       else
-        content.document.body.appendChild(node);
+        doc.body.appendChild(node);
     },
 
     moveFunction: function (evt, div, old_x, old_y) {
@@ -143,19 +144,20 @@ if (!reasy) var reasy = {};
       var myXY = new reasy.reasy.XY(x, y);
       var mv_fn = function (newevt) { reasy.reasy.mouseMove(newevt, myXY, div, fn); };
 
+      var doc = reasy.reasy.CrossBrowserDocument();
       var remove_fn = function removeFn() {
         div.style.cursor = 'default';
         div.removeEventListener("mousemove", mv_fn, false);
-        content.document.removeEventListener("mousemove", mv_fn, false);
+        doc.removeEventListener("mousemove", mv_fn, false);
         div.removeEventListener("mouseup", removeFn, false);
-        content.document.removeEventListener("mouseup", removeFn, false);
+        doc.removeEventListener("mouseup", removeFn, false);
       }
 
       div.addEventListener("mousemove", mv_fn, false);
-      content.document.addEventListener("mousemove", mv_fn, false);
+      doc.addEventListener("mousemove", mv_fn, false);
 
       div.addEventListener("mouseup", remove_fn, false);
-      content.document.addEventListener("mouseup", remove_fn, false);
+      doc.addEventListener("mouseup", remove_fn, false);
     },
 
     mouseOver: function (evt) {
@@ -197,17 +199,18 @@ if (!reasy) var reasy = {};
 //      console.log("reasy close");
 //      console.log(evt);
 //      console.log(div);
-      var reasyDiv = content.document.getElementById(reasy.reasy.houseDivName);
+      var doc = reasy.reasy.CrossBrowserDocument();
+      var reasyDiv = doc.getElementById(reasy.reasy.houseDivName);
       if (reasyDiv)
-        content.document.body.removeChild(reasyDiv);
+        doc.body.removeChild(reasyDiv);
 
-      var bg = content.document.getElementById(reasy.reasy.opaqueBGName);
+      var bg = doc.getElementById(reasy.reasy.opaqueBGName);
       if (bg)
-        content.document.body.removeChild(bg);
+        doc.body.removeChild(bg);
 
       if (div || reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
       {
-        var sel = content.window.getSelection();
+        var sel = reasy.reasy.CrossBrowserWindow().getSelection();
         if (sel && sel.removeAllRanges)
           sel.removeAllRanges();
       }
@@ -217,7 +220,7 @@ if (!reasy) var reasy = {};
       reasy.reasy.backFn = null;
 
       if (div) {
-        var evt = document.createEvent("HTMLEvents");
+        evt = doc.createEvent("HTMLEvents");
         evt.initEvent("mouseup", true, true ); // event type,bubbling,cancelable
         div.dispatchEvent(evt);
       }
@@ -422,8 +425,9 @@ if (!reasy) var reasy = {};
 
     select: function () {
       // get the text content if there is not an existing reasy session
-      if (content && content.document && !content.document.getElementById(reasy.reasy.houseDivName)) {
-        var gotText = reasy.reasy.getIFrameSelection(content.document);
+      var doc = reasy.reasy.CrossBrowserDocument();
+      if (doc && !doc.getElementById(reasy.reasy.houseDivName)) {
+        var gotText = reasy.reasy.getIFrameSelection(doc);
 
         if (gotText) {
           var split = gotText.split(/[-\u2013\u2014\s]/gi);
@@ -445,17 +449,19 @@ if (!reasy) var reasy = {};
     },
 
     attachListeners: function (evt) {
+      var doc = reasy.reasy.CrossBrowserDocument();
       if (!reasy.reasy.keyFn)
         reasy.reasy.keyFn = reasy.reasy.select;
       if (reasy.reasy_db.singleton().auto_popup())
-          content.document.addEventListener("mouseup", reasy.reasy.select, false);
-      if (!(typeof content === 'undefined') && content && content.document)
-          content.document.addEventListener("keydown", reasy.reasy.keyDown, false);
+          doc.addEventListener("mouseup", reasy.reasy.select, false);
+      if (doc)
+          doc.addEventListener("keydown", reasy.reasy.keyDown, false);
     },
 
     detachListeners: function (evt) {
-      content.document.removeEventListener("mouseup", reasy.reasy.select, false);
-      content.document.removeEventListener("keydown", reasy.reasy.keyDown, false);
+      var doc = reasy.reasy.CrossBrowserDocument();
+      doc.removeEventListener("mouseup", reasy.reasy.select, false);
+      doc.removeEventListener("keydown", reasy.reasy.keyDown, false);
     }
   }
 
@@ -480,7 +486,11 @@ if (!reasy) var reasy = {};
 
 //alert("<- reasy");
 
+//console.log("adding listeners");
 
 window.addEventListener("load", reasy.reasy.attachListeners, true);
+//console.log("added load listener");
 window.addEventListener("focus", reasy.reasy.attachListeners, true);
 window.addEventListener("unload", reasy.reasy.detachListeners, true);
+
+//console.log("added all listeners");
