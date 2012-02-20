@@ -168,6 +168,9 @@ if (!reasy) var reasy = {};
     },
 
     houseClicked: function (evt) {
+      if (typeof evt === 'undefined' || !evt)
+          return;
+
       var x = evt.clientX;
       var y = evt.clientY;
       var div = evt.target;
@@ -205,6 +208,9 @@ if (!reasy) var reasy = {};
     },
 
     mouseOver: function (evt) {
+      if (typeof evt === 'undefined' || !evt)
+          return;
+
       var x = evt.clientX;
       var y = evt.clientY;
       var div = evt.target;
