@@ -34,7 +34,7 @@ if (!reasy) var reasy = {};
         var window = reasy.reasy.XBrowserWindow();
         if (!window.getSelection) {
             var document = reasy.reasy.XBrowserDocument();
-            selection = document.selection.clear();
+            selection = document.selection.empty();
         }
         else {
             var sel = window.getSelection();
