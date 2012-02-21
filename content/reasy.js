@@ -14,7 +14,7 @@ if (!reasy) var reasy = {};
       this.x = x;
       this.y = y;
     },
-
+    
     XBrowserGetSelection: function(doc) {
         var selection = '';
         var window = reasy.reasy.XBrowserWindow();
@@ -23,11 +23,24 @@ if (!reasy) var reasy = {};
             selection = document.selection.createRange().htmlText;
         }
         else {
-          selection = reasy.reasy.XBrowserWindow().getSelection();
+          selection = window.getSelection();
           if (selection.toString)
             selection = selection.toString();
         }
         return selection;
+    },
+    
+    XBrowserClearSelection: function(doc) {
+        var window = reasy.reasy.XBrowserWindow();
+        if (!window.getSelection) {
+            var document = reasy.reasy.XBrowserDocument();
+            selection = document.selection.clear();
+        }
+        else {
+            var sel = window.getSelection();
+            if (sel && sel.removeAllRanges)
+                sel.removeAllRanges();
+        }
     },
     
     XBrowserAddEventListener: function(el, eventName, fn, b) {
@@ -260,16 +273,14 @@ if (!reasy) var reasy = {};
 
       if (div || reasy.reasy_db.singleton().deselect_close())	//div is valid on forced close
       {
-        var sel = reasy.reasy.XBrowserWindow().getSelection();
-        if (sel && sel.removeAllRanges)
-          sel.removeAllRanges();
+        reasy.reasy.XBrowserClearSelection();
       }
 
       reasy.reasy.keyFn = reasy.reasy.select;
       reasy.reasy.fwdFn = null;
       reasy.reasy.backFn = null;
 
-      if (div) {
+      if (div && evt) {
         evt = doc.createEvent("HTMLEvents");
         evt.initEvent("mouseup", true, true ); // event type,bubbling,cancelable
         div.dispatchEvent(evt);
