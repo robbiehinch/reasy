@@ -1,4 +1,4 @@
-application: reasy
+application: reasy-reader
 version: 1
 runtime: python
 api_version: 1
@@ -15,7 +15,7 @@ handlers:
   
 - url: /content/reasy_reader.js
   static_files: content/reasy_reader.js
-  upload: content/  reasy_reader.js
+  upload: content/reasy_reader.js
  
 - url: /jquery.cookie/cookie.js
   static_files: jquery.cookie/cookie.js
