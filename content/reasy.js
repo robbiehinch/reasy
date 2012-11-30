@@ -4,7 +4,7 @@ if (!reasy) var reasy = {};
 //alert('reasy ->');
 
 (function(){
-  //alert("reasy1");
+//alert("reasy1");
   reasy.reasy = {
 
     houseDivName: 'reasyHouseTextDiv',
@@ -491,6 +491,7 @@ if (!reasy) var reasy = {};
         var gotText = reasy.reasy.getIFrameSelection(doc);
 
         if (gotText) {
+          gotText = gotText.replace(/[ \f\n\r\t\v\u00A0\u2028\u2029]+/, ' ');   //fold repeated spaces into one space
           var split = gotText.split(/[-\u2013\u2014\s]/gi);
           if (split && split.length >= reasy.reasy_db.singleton().minWords()) {
             reasy.reasy.createDom(document, split);
